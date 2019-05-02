@@ -1,6 +1,8 @@
-import React, { useState }from 'react';
-import { ICondition } from '../../../../types';
+import React from 'react';
+import { IConditionContent } from '../../../../types';
 import { Button, Dropdown, Grid, Icon, Input, Label, Segment, } from 'semantic-ui-react';
+import TargetPicker from '../TargetPicker';
+import AnalyzeCondition from '../AnalyzeCondition';
 
 const matchTypes = [
     {
@@ -24,9 +26,9 @@ const matchTypes = [
 const Condition = ({
     condition
 }: {
-    condition: ICondition
+    condition: IConditionContent
 }) => {
-    const { target, match, open } = condition;
+    const { conditionId, target, match, open } = condition;
     const values  = match ? match.values : undefined;
 
 return open 
@@ -35,10 +37,12 @@ return open
     <Grid celled columns={2}>
         <Grid.Row>
             <Grid.Column width={3}>
-            Target
+            <TargetPicker conditionId={conditionId}/>
             </Grid.Column>
             <Grid.Column>
-            {target && target.type && target.type} {target && target.name && target.name}
+            Name: {target && target.name 
+                ? target.name
+            : `No target`}
             </Grid.Column>
     </Grid.Row>
     <Grid.Row>
@@ -53,12 +57,17 @@ return open
         </Grid.Column>
     </Grid.Row>
         <ValueEditor values={values} />  
+    <Grid.Row>
+        <AnalyzeCondition conditionId={conditionId}/>
+    </Grid.Row>
     </Grid>
     </Segment>
 )
 : (
     <React.Fragment>
-    <div>Target: {target && target.type && target.type} {target && target.name && target.name}</div>
+    <div>Target: {target && target.name 
+    ? target.name
+    : `No target`}</div>
     <div>Match Type: {match && match.type && match.type}</div>
     <div>Values: {!!values ? 
     values
@@ -91,4 +100,6 @@ Values
     : `No values`}
 </Grid.Column>
 </Grid.Row>
+
+
 

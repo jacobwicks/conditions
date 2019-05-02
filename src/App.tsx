@@ -1,54 +1,40 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './App.css';
 import Expression from './components/Expresssion';
 import Insertables from './components/Insertables';
-import { DragDropContext } from 'react-beautiful-dnd';
 import { Grid } from 'semantic-ui-react';
-import { ItemContext, ItemProvider } from './services/ItemContext';
-import { DropResult } from 'react-beautiful-dnd'
+import { ItemProvider } from './services/ItemContext';
+import { InputProvider } from './services/InputContext';
+import DragDropContext from './components/DragDropContextWithDispatch'
+import Analyze from './components/Analyze';
+import Inputs from './components/Inputs';
 
-const WithDispatch = (props: any) => {
-  const { dispatch } = useContext(ItemContext);
-  console.log(typeof(dispatch))
-  return (
-    <DragDropContext
-    onDragEnd={(result: DropResult) => {
-      const { destination, source } = result;
-      const { droppableId: startDroppable, index: startIndex } = source;
-      const { droppableId: endDroppable = null, index: endIndex = null, } = destination || {};
-
-      dispatch({
-        type: 'drag',
-        payload: {
-          startDroppable,
-          startIndex,
-          endDroppable,
-          endIndex
-        }
-      })
-    }}
-    dispatch={dispatch}
-    {...props}
-    />
-  )
-}
-//DraggableLocation | undefined
 const App = () =>
   <div className="App">
     <ItemProvider>
-    <WithDispatch
-
-    >
+      <InputProvider>
+    <DragDropContext>
 
       <Grid columns='equal'>
       <Grid.Column>
-        <Expression />
+        <Grid.Row>
+          <Inputs/>
+        </Grid.Row>
+        <Grid.Row>
+        < Expression />
+        </Grid.Row>
           </Grid.Column>
           <Grid.Column>
-            <Insertables/>
+            <Grid.Row>
+              <Analyze/>
+            </Grid.Row>
+            <Grid.Row>
+              <Insertables/>
+            </Grid.Row>
           </Grid.Column>
       </Grid>
-      </WithDispatch>
+      </DragDropContext>
+      </InputProvider>
     </ItemProvider>
   </div>
 

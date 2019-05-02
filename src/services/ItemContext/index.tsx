@@ -1,45 +1,61 @@
 import React, { createContext, useReducer } from 'react';
+import { IExpression } from '../../types';
 
 //const uuidv4 = require('uuid/v4')
 //import { v4 as uuid } from 'uuid'
 import uuidv4 from 'uuid/v4';
 
-const initialState: any = {
-    items: [
-      {
-        itemType: 'parenthesis',
-        content: {
-            parenType: 'open'
-        }
+const items: IExpression = [
+  {
+    itemType: 'parenthesis',
+    content: {
+        parenType: 'open'
+    }
+  },
+  {
+    itemType: 'operator',
+    content: {
+      operatorType: 'not'
+    }
+  },
+  {
+    itemType: 'condition',
+    content: {
+      conditionId: `string`,
+      target: {
+        name: `1`,
+        type: `info`
       },
-      {
-        itemType: 'operator',
-        content: {
-          operatorType: 'not'
-        }
-      },
-      {
-        itemType: 'condition',
-        content: {
-          conditionId: `string`,
-          target: {
-            name: `string`,
-            type: `string`
-          },
-          match: {
-            values: [`Yes`],
-            type: `exact`
-          }
-        },
-        open: true
-      },
-      {
-        itemType: 'parenthesis',
-        content: {
-          parenType: 'close'
-        }
+      match: {
+        values: [`Yes`],
+        type: `exact`
       }
-    ]
+    },
+  },
+  {
+    itemType: 'parenthesis',
+    content: {
+      parenType: 'close'
+    }
+  }
+]
+
+const newOpen = {
+  itemType: 'parenthesis',
+  content: {
+    parenType: 'open'
+  }
+}
+
+const newClose = {
+  itemType: 'parenthesis',
+  content: {
+    parenType: 'close'
+  }
+}
+
+const initialState: any = {
+  items
   };
 
   let reducer = (state: any, action: any) => {
@@ -55,13 +71,14 @@ const initialState: any = {
       }
       case 'drag': {
         const {
+          item,
           startDroppable,
           startIndex,
           endDroppable,
           endIndex
         } = action.payload;
+        const items = [...state.items];
         if (startDroppable === 'first' && endDroppable === 'first') {
-          const items = [...state.items];
           const moved = items.splice(startIndex, 1)[0];
           items.splice(endIndex, 0, moved)
           return {
@@ -69,7 +86,32 @@ const initialState: any = {
             items
           }
         } else if (startDroppable === 'second' && endDroppable === 'first') {
-          return state;
+          if (item.itemType === 'parenthesis' && item.content.parenType === 'pair') {
+            items.splice(endIndex, 0, newOpen, newClose) 
+          } else if (item.itemType === 'conditionPlaceholder') {
+            const condition = {
+              itemType: 'condition',
+              content: {
+                conditionId: uuidv4(),
+                target: {
+                  name: null,
+                  type: null
+                },
+                match: {
+                  values: [],
+                  type: null
+                }
+              },
+            }
+            items.splice(endIndex, 0, condition);
+          } else {
+            items.splice(endIndex, 0, item);
+          }
+            return {
+              ...state,
+              items
+            } 
+;
         } else {
           return state;
         }
@@ -79,20 +121,8 @@ const initialState: any = {
         const { itemType } = item;
         const items = [...state.items]
         if (itemType === 'parenthesis' && item.content.parenType === 'pair' ) {
-          const open = {
-            itemType: 'parenthesis',
-            content: {
-              parenType: 'open'
-            }
-          }
-
-          const close = {
-            itemType: 'parenthesis',
-            content: {
-              parenType: 'close'
-            }
-          }
-          items.splice(0, 0, open, close)
+         
+          items.splice(0, 0, newOpen, newClose)
           return {
             ...state,
             items
@@ -124,6 +154,22 @@ const initialState: any = {
           items
         }
       }
+      }
+      case 'targetSelect' : {
+        const { conditionId, name } = action;
+        const items = [...state.items];
+        const index = state.items.findIndex((item: any) => 
+          item.content && 
+          item.content.conditionId && 
+          item.content.conditionId === conditionId)
+
+        const condition = {...items[index]};
+        condition.content.target.name = name;
+        items[index] = condition;
+        return {
+          ...state,
+          items
+        }
       }
       case 'toggle': {
           const { index } = action.payload;
