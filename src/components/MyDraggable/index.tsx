@@ -5,10 +5,12 @@ import DraggableContent from './components/DraggableContent';
 const MyDraggable = ({
   item,
   changeOnRightClick,
+  doubleClickFn,
   droppableId,
   draggableId,
   index
 } :{
+  doubleClickFn?: (droppableId: string, index: number) => void,
   droppableId: string,
   changeOnRightClick?: boolean,
     item: any,
@@ -27,9 +29,10 @@ const MyDraggable = ({
         {...provided.dragHandleProps}
       >
         <DraggableContent
-          droppableId={droppableId} 
+          doubleClickFn={doubleClickFn}
+          droppableId={droppableId}
           item={item}
-          index={index} 
+          index={index}
           isDragging={snapshot.isDragging}
           changeOnRightClick={changeOnRightClick}
           />
@@ -40,8 +43,3 @@ const MyDraggable = ({
 </Draggable>
 
 export default MyDraggable;
-
-
-
-
-

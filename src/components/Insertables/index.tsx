@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import MyDroppable from '../MyDroppable';
+import { ItemContext } from '../../services/ItemContext';
 
 const insertables: any[] = [
-    { itemType: 'open'},
-    { itemType: 'close'},
+      {
+          itemType: 'conditionPlaceholder',
+      },
+    {
+      itemType: 'parenthesis',
+      content: {
+        parenType: 'pair'
+      }
+    },
+    {
+      itemType: 'parenthesis',
+    content: {
+      parenType: 'open'
+    }
+  },
+    { itemType: 'parenthesis',
+    content: {
+      parenType: 'close'
+    }
+  },
     {
         itemType: 'operator',
         content: {
@@ -22,18 +41,29 @@ const insertables: any[] = [
         operatorType: 'not'
       }
     },
-    {
-        itemType: 'conditionPlaceholder',
-    }
 ]
 
 
-const Insertables = () =>
-<MyDroppable 
-droppableId={'second'}
-header={`New Components`}
-height={400}
-items={insertables}
-/>
+const Insertables = () => {
+  const { dispatch } = useContext(ItemContext)
+  const doubleClickFn = (droppableId: string, index: number) => {
+      dispatch({
+        type: 'insertNew',
+        payload: {
+          item: insertables[index]
+        }
+      })
+    }
+
+  return (
+    <MyDroppable
+    droppableId={'second'}
+    doubleClickFn={doubleClickFn}
+    header={`New Components`}
+    height={400}
+    items={insertables}
+    />
+  )}
+
 
 export default Insertables;

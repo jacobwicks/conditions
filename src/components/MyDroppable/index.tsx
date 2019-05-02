@@ -10,12 +10,14 @@ import { generateId } from './services/';
 
 const MyDroppable = ({
   droppableId,
+  doubleClickFn,
   changeOnRightClick,
   header,
   height,
   items,
 } : {
   changeOnRightClick?: boolean,
+  doubleClickFn?: (droppableId: string, index: number) => void,
   droppableId: string,
   header?: string,
   height?: number,
@@ -46,6 +48,7 @@ const MyDroppable = ({
           .map((item : any, index: number) =>
             <MyDraggable
             droppableId={droppableId}
+            doubleClickFn={doubleClickFn}
             changeOnRightClick={changeOnRightClick}
                 item={item}
                 draggableId={generateId({

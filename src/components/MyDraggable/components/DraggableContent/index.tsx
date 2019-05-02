@@ -9,8 +9,10 @@ const DraggableContent = ({
     item,
     index,
     isDragging,
-    changeOnRightClick
+    changeOnRightClick,
+    doubleClickFn
   }: {
+    doubleClickFn?: (droppableId: string, index: number) => void,
     droppableId: string,
     index: number,
     item : any,
@@ -20,7 +22,6 @@ const DraggableContent = ({
       let color: keyof typeof colors | undefined = undefined;
       let content: string | undefined | any = undefined;
       const { dispatch } = useContext(ItemContext)
-  
   if (item.itemType === 'condition') {
    color = 'blue'
    content = <Condition condition={item.content}/>
@@ -30,14 +31,14 @@ const DraggableContent = ({
   } else if (item.itemType === 'operator') {
    color = 'red'
    content = <Header as='h1'>{item.content.operatorType}</Header>
-  } else if (item.itemType === 'open') {
+ } else if (item.itemType === 'parenthesis') {
    color = 'yellow'
-   content = <Header as='h1'>(</Header>
-  } else if (item.itemType === 'close') {
-   color = 'yellow'
-   content = <Header as='h1'>)</Header>
+   const { parenType } = item.content;
+      if (parenType === 'close') content = <Header as='h1'>)</Header>
+        else if (parenType === 'open') content = <Header as='h1'>(</Header>
+        else if (parenType === 'pair') content = <Header as='h1'>()</Header>
   }
-  
+
   return (
       <Label size='large'
             onContextMenu={(e: any) => {
@@ -51,6 +52,7 @@ const DraggableContent = ({
                 }
               })
             }}
+            onDoubleClick={() => !!doubleClickFn && doubleClickFn(droppableId, index)}
             color={isDragging
               ? 'green'
               : color
