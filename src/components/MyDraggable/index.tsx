@@ -22,7 +22,6 @@ const MyDraggable = ({
   index={index}
   >
   {(provided, snapshot) => (
-    <div>
       <div
         ref={provided.innerRef}
         {...provided.draggableProps}
@@ -37,8 +36,6 @@ const MyDraggable = ({
           changeOnRightClick={changeOnRightClick}
           />
       </div>
-      {provided.placeholder}
-    </div>
   )}
 </Draggable>
 

@@ -6,10 +6,11 @@ import {
 import { Droppable } from 'react-beautiful-dnd';
 import MyDraggable from '../MyDraggable';
 import { generateId } from './services/';
-
+import { directions } from '../../types';
 
 const MyDroppable = ({
   droppableId,
+  direction,
   doubleClickFn,
   changeOnRightClick,
   header,
@@ -17,6 +18,7 @@ const MyDroppable = ({
   items,
 } : {
   changeOnRightClick?: boolean,
+  direction?: keyof typeof directions,
   doubleClickFn?: (droppableId: string, index: number) => void,
   droppableId: string,
   header?: string,
@@ -25,7 +27,7 @@ const MyDroppable = ({
 }) =>
 <Droppable
   droppableId={droppableId}
-  >
+  direction={direction ? direction : 'vertical'}>
       {(provided, snapshot) => (
         <Segment
           style={{
@@ -39,11 +41,17 @@ const MyDroppable = ({
           inverted={snapshot.isDraggingOver}
           tertiary={snapshot.isDraggingOver}
           >
-        <div
-          ref={provided.innerRef}
-        > <Header as='h3'>
+          <Header 
+         as='h3'
+        >
           {header}
           </Header>
+        <div
+          style={direction === 'horizontal' 
+          ? {display:'flex'}
+          : undefined}
+          ref={provided.innerRef}
+        > 
           {items && items
           .map((item : any, index: number) =>
             <MyDraggable

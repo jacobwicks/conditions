@@ -3,6 +3,8 @@ import { ItemContext } from '../../../../services/ItemContext';
 import { Header, Label } from 'semantic-ui-react';
 import { colors } from '../../../../types';
 import Condition from '../Condition';
+import { conditionValue } from '../../../../services/ConditionValue'
+import { InputContext, } from '../../../../services/InputContext';
 
 const DraggableContent = ({
     droppableId,
@@ -19,17 +21,25 @@ const DraggableContent = ({
     isDragging: boolean,
     changeOnRightClick?: boolean
   }) => {
+    const { items } = useContext(ItemContext).state;
+    const { inputs } = useContext(InputContext).state;
+
       let color: keyof typeof colors | undefined = undefined;
       let content: string | undefined | any = undefined;
       const { dispatch } = useContext(ItemContext)
   if (item.itemType === 'condition') {
-   color = 'blue'
-   content = <Condition condition={item.content}/>
+   const getColor = (conditionId: string) => {
+     const result = conditionValue({conditionId, items, inputs}) 
+     if (result === undefined) return 'blue'
+     else return result ? 'green' : 'red'
+    } 
+    color = getColor(item.content.conditionId)
+    content = <Condition condition={item.content}/>
   } else if (item.itemType === 'conditionPlaceholder') {
    color = 'blue'
    content = <Header as='h1'>Condition</Header>
   } else if (item.itemType === 'operator') {
-   color = 'red'
+   color = 'orange'
    content = <Header as='h1'>{item.content.operatorType}</Header>
  } else if (item.itemType === 'parenthesis') {
    color = 'yellow'

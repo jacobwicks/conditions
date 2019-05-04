@@ -8,6 +8,7 @@ import { InputProvider } from './services/InputContext';
 import DragDropContext from './components/DragDropContextWithDispatch'
 import Analyze from './components/Analyze';
 import Inputs from './components/Inputs';
+import Trash from './components/Trash';
 
 const App = () =>
   <div className="App">
@@ -18,10 +19,10 @@ const App = () =>
       <Grid columns='equal'>
       <Grid.Column>
         <Grid.Row>
-          <Inputs/>
+        <Expression />
         </Grid.Row>
         <Grid.Row>
-        < Expression />
+          <Inputs/>
         </Grid.Row>
           </Grid.Column>
           <Grid.Column>
@@ -30,6 +31,9 @@ const App = () =>
             </Grid.Row>
             <Grid.Row>
               <Insertables/>
+            </Grid.Row>
+            <Grid.Row>
+              <Trash/>
             </Grid.Row>
           </Grid.Column>
       </Grid>

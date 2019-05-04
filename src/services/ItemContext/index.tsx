@@ -1,11 +1,8 @@
 import React, { createContext, useReducer } from 'react';
-import { IExpression } from '../../types';
-
-//const uuidv4 = require('uuid/v4')
-//import { v4 as uuid } from 'uuid'
+import { IItems } from '../../types';
 import uuidv4 from 'uuid/v4';
 
-const items: IExpression = [
+const items: IItems = [
   {
     itemType: 'parenthesis',
     content: {
@@ -23,12 +20,11 @@ const items: IExpression = [
     content: {
       conditionId: `string`,
       target: {
-        name: `1`,
-        type: `info`
-      },
+        id: `1`,
+       },
       match: {
         values: [`Yes`],
-        type: `exact`
+        type: `partial`
       }
     },
   },
@@ -60,6 +56,42 @@ const initialState: any = {
 
   let reducer = (state: any, action: any) => {
     switch (action.type) {
+      case 'addValue': {
+        const { conditionId } = action;
+        const items = [...state.items];
+        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        
+        condition.content.match.values.push('');
+
+        return {
+          ...state,
+          items
+        }
+      }
+      case 'deleteValue': {
+        const { conditionId, index } = action;
+        const items = [...state.items];
+        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        
+        condition.content.match.values.splice(index, 1);
+
+        return {
+          ...state,
+          items
+        }
+      }
+      case 'setValue': {
+        const { conditionId, index, value } = action;
+        const items = [...state.items];
+        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        condition.content.match.values[index] = value;
+        //condition.content.match.value[index] = value;
+
+        return {
+          ...state,
+          items
+        }
+      }
       case 'delete': {
         const { index } = action.payload;
         const items = [...state.items];
@@ -81,6 +113,14 @@ const initialState: any = {
         if (startDroppable === 'first' && endDroppable === 'first') {
           const moved = items.splice(startIndex, 1)[0];
           items.splice(endIndex, 0, moved)
+          return {
+            ...state,
+            items
+          }
+        } else if (startDroppable === 'first' && endDroppable === 'trash'){
+          const { startIndex } = action.payload;
+          const items = [...state.items];
+          items.splice(startIndex, 1);
           return {
             ...state,
             items
@@ -133,8 +173,7 @@ const initialState: any = {
             content: {
               conditionId: uuidv4(),
               target: {
-                name: null,
-                type: null
+                id: null
               },
               match: {
                 values: [],
@@ -155,17 +194,29 @@ const initialState: any = {
         }
       }
       }
-      case 'targetSelect' : {
-        const { conditionId, name } = action;
+      case 'matchTypeSelect':{
+        const { 
+          conditionId,
+          matchType
+        } = action;
+        
         const items = [...state.items];
-        const index = state.items.findIndex((item: any) => 
-          item.content && 
-          item.content.conditionId && 
-          item.content.conditionId === conditionId)
+        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        
+        condition.content.match.type = matchType;
 
-        const condition = {...items[index]};
-        condition.content.target.name = name;
-        items[index] = condition;
+        return {
+          ...state,
+          items
+        }
+      }
+      case 'targetSelect' : {
+        const { conditionId, targetId } = action;
+        const items = [...state.items];
+        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        
+        condition.content.target.id = targetId;
+
         return {
           ...state,
           items

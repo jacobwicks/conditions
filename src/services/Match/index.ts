@@ -3,6 +3,7 @@ import _ from 'lodash';
 const isExact = (string: string) =>
 !!(string.slice(0,1) === '"' && string.slice(-1) === '"')
 
+
 const removeQuotesFrom = (string: string) => {
   string = string.slice(1, string.length);
   return string.slice(0, -1);
@@ -66,7 +67,9 @@ const getMatches = (value: string, target: any[], searchBy: string[]) => {
   ])]
 }
 
-
+//In the app, value is a searchstring provided by the user
+//here, it's input that we're referring to
+//must change the evaluation flow
 const getAllResults = (values: string[], items: any[], searchBy: string[]) => values
 .reduce((accumulator: {
     mustHave: string[],
@@ -155,6 +158,7 @@ export const match = ({
     searchBy ?: string[],
     simpleReturn ?: string
 }) => {
+  console.log(`match called with `, searchString, items)
   if (!items) return;
   items = getItems(items);
 
@@ -170,6 +174,7 @@ export const match = ({
       }
     });
 
+      console.log(`getting all results of `, values, items, searchBy);
     let { results, mustHave, toFilterOut } = getAllResults(values, items, searchBy);
 
     toFilterOut =  getToFilterOut(toFilterOut, results, searchBy);

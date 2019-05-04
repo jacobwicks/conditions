@@ -2,8 +2,14 @@ export enum colors {
     blue = "blue",
     red = "red",
     yellow = "yellow",
+    orange = 'orange',
+    green = 'green'
   }
   
+export enum directions {
+  horizontal = 'horizontal',
+  vertical = 'vertical'
+}
 
 export enum targetTypes {
     info = "info",
@@ -22,8 +28,16 @@ export interface IMatch {
     type: keyof typeof matchTypes
 }
 
+export interface IItems extends Array<IParenthesis | IOperator | ICondition>{}
 
-export interface IExpression extends Array<IParenthesis | IOperator | ICondition>{}
+// export interface IExpression extends 
+//export interface IItems extends Array<IParenthesis | IOperator | ICondition>{}
+
+export interface IInput {
+  id: string,
+  name: string,
+  value: string
+}
 
 export interface IParenthesis {
     itemType: 'parenthesis',
@@ -52,7 +66,6 @@ export interface IConditionContent {
 }  
 
 export interface ITarget {
-  name: string,
-  type: keyof typeof targetTypes
+  id: string,
 }
 

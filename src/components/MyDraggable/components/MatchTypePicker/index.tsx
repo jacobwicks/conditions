@@ -1,33 +1,30 @@
 import React, { useContext } from 'react';
 import { Dropdown } from 'semantic-ui-react';
-import { InputContext, } from '../../../../services/InputContext';
 import { ItemContext } from '../../../../services/ItemContext';
-import { IInput } from '../../../../types';
+import { matchTypes } from '../../../../types';
 
 const TargetPicker = ({conditionId}: {conditionId: string}) => {
     const { dispatch } = useContext(ItemContext);
     const { items } = useContext(ItemContext).state;
-    const { inputs } = useContext(InputContext).state;
-    const targetId = items.find((item: any) => item.content.conditionId === conditionId).content.target.id;
-    const text = targetId 
-    ? inputs.find((input: IInput) => input.id === targetId).name 
-    : `no target`
+    const matchType = items.find((item: any) => item.content.conditionId === conditionId).content.match.type;
+    const text = matchType 
+    ? matchType 
+    : `no selection made`
 
-    const options = inputs.map((input: any) => {
-        const { name, id } = input;
+    const options = Object.keys(matchTypes).map((matchType: string) => {
         return {
-            key: name,
-            text: name,
-            value: id
+            key: matchType,
+            text: matchType,
+            value: matchType
         }
     })
 
     return   (
         <Dropdown
         onChange={(e, {value}) => typeof(value) === 'string' && dispatch({
-            type: 'targetSelect',
+            type: 'matchTypeSelect',
             conditionId,
-            targetId: value
+            matchType: value
         })}
         button
         floating

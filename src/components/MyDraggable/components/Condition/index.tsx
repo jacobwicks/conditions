@@ -1,27 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { IConditionContent } from '../../../../types';
-import { Button, Dropdown, Grid, Icon, Input, Label, Segment, } from 'semantic-ui-react';
+import { Grid, Segment, } from 'semantic-ui-react';
 import TargetPicker from '../TargetPicker';
-import AnalyzeCondition from '../AnalyzeCondition';
+import MatchTypePicker from '../MatchTypePicker';
+import ValueEditor from '../ValueEditor';
+import { InputContext } from '../../../../services/InputContext';
+import { IInput } from '../../../../types';
 
-const matchTypes = [
-    {
-        value: `exact`,
-        text: `exact`
-    },
-    {
-        value: `partial`,
-        text: `partial`
-    },
-    {
-        value: `any`,
-        text: `any`,
-    },
-    {
-        value: `none`,
-        text: `none`
-    }
-]
 
 const Condition = ({
     condition
@@ -30,43 +15,34 @@ const Condition = ({
 }) => {
     const { conditionId, target, match, open } = condition;
     const values  = match ? match.values : undefined;
-
+    const { inputs } = useContext(InputContext).state;
+    const input = target && inputs.find((input: IInput) => input.id === target.id)
 return open 
 ? (
     <Segment style={{color: 'black'}}>
     <Grid celled columns={2}>
         <Grid.Row>
             <Grid.Column width={3}>
-            <TargetPicker conditionId={conditionId}/>
+            Target
             </Grid.Column>
             <Grid.Column>
-            Name: {target && target.name 
-                ? target.name
-            : `No target`}
+            <TargetPicker conditionId={conditionId}/>
             </Grid.Column>
     </Grid.Row>
     <Grid.Row>
         <Grid.Column width={3}>Match Type</Grid.Column>
         <Grid.Column>
-        <Dropdown    
-        // onChange={(e, {value}) => typeof(value) === 'string' && console.log(value)}
-        options={matchTypes}
-        placeholder='Select'
-        value={match.type}
-        />
+        <MatchTypePicker conditionId={conditionId}/>
         </Grid.Column>
     </Grid.Row>
-        <ValueEditor values={values} />  
-    <Grid.Row>
-        <AnalyzeCondition conditionId={conditionId}/>
-    </Grid.Row>
+        <ValueEditor conditionId={conditionId}/>  
     </Grid>
     </Segment>
 )
 : (
     <React.Fragment>
-    <div>Target: {target && target.name 
-    ? target.name
+    <div>Target: {input
+    ? input.name
     : `No target`}</div>
     <div>Match Type: {match && match.type && match.type}</div>
     <div>Values: {!!values ? 
@@ -85,21 +61,6 @@ return open
 
 export default Condition;
 
-const ValueEditor = ({values}:{values: string[] | undefined}) => 
-<Grid.Row>
-<Grid.Column width={3}>
-Values
-<Button icon onClick={() => console.log(`clicked`)}><Icon name='add'/></Button>
-</Grid.Column>
-<Grid.Column>
-    {values 
-    ? values.map((value: string, index: number) => 
-        <div key={`valueEditorValue` + index.toString()}>{index + 1}. <Input value={value}/>
-        <Label style={{cursor:'pointer'}}><Icon name='delete'/></Label>
-        </div>)
-    : `No values`}
-</Grid.Column>
-</Grid.Row>
 
 
 

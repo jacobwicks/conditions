@@ -1,6 +1,6 @@
-import { IExpression } from '../../types';
+import { IItems } from '../../types';
 
-export const parenthesisMatch = (expression: IExpression) => {
+export const parenthesisMatch = (expression: IItems) => {
 
     return !expression.reduce((acc, item) => {
         const { itemType, content } = item;
