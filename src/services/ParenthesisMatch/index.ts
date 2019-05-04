@@ -16,8 +16,9 @@ closedParenthesis.content.parenType === 'close'
 
 export const parenthesisMatch = (expression: IItems) =>
 !expression
-? []
-: expression.reduce((stack: IParenthesisWithIndex[], cur, index) => {
+? true
+: !(!!expression
+  .reduce((stack: IParenthesisWithIndex[], cur, index) => {
   if (isParenthesis(cur)) {
     if (isOpenParenthesis(cur as IParenthesis)) {
       stack.push({...cur, index} as IParenthesisWithIndex)
@@ -38,7 +39,7 @@ export const parenthesisMatch = (expression: IItems) =>
     }
   }
   return stack;
-}, []).map(item => item.index)
+}, []).length)
 
 export const getMatch = (myIndex: number, expression: IItems) => {
   if (myIndex > expression.length -1) {

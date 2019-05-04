@@ -31,8 +31,8 @@ const Parenthesis = ({
   }
 
 const getColor = () => {
-  if (droppableId === 'first' &&
-  getMatch(index, expression) === undefined) return 'grey'
+  if (droppableId !== 'first') return 'yellow'
+  if (getMatch(index, expression) === undefined) return 'grey'
 
   return highlight
     ? 'purple'
