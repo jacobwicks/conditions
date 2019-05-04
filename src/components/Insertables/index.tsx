@@ -61,7 +61,7 @@ const Insertables = () => {
     droppableId={'second'}
     direction={'horizontal'}
     doubleClickFn={doubleClickFn}
-    header={`New Components`}
+    header={`New Components - double click or drag and drop to add`}
     height={200}
     items={insertables}
     />

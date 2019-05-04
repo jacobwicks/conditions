@@ -10,8 +10,6 @@ export const conditionValue = ({
     expression: IExpression,
     inputs: any[]
 }) => {
-   // const condition = expression.find((item: ICondition) => item.content.conditionId === conditionId)
-
     const condition = expression.find((item: ICondition | IParenthesis |IOperator) => {
       if (item.itemType === 'condition') {
           if (item.content.conditionId === conditionId) {
@@ -24,7 +22,7 @@ export const conditionValue = ({
     const { id } = condition.content.target;
     if (!id) return undefined;
     if (!inputs || inputs.length === 0) return undefined;
-    console.log(`before I crash, id is ${id} and inputs is`, inputs)
+
     const inputValue = inputs.find((input: IInput) => input.id === id).value;
     //@ts-ignore
     const matchType = condition.content.match.type;
@@ -33,16 +31,41 @@ export const conditionValue = ({
     
     if (matchType === 'exact') {
         if (!(!!values.length) || !inputValue) return false;
-        values = values
-        .map((value: string) => '"' + value + '"')
-      } else if (matchType === 'none') return !(!!inputValue)
-        else if (matchType === 'any') return !!inputValue
-      
+        if (!!inputValue) {
+          const result = match({
+            searchString: inputValue,
+            items: values,
+            exact: true,
+            includePartial: false,
+            searchBy: undefined,
+            simpleReturn: undefined
+          })
+          return Array.isArray(result) ? !!result.length : false;  
+      }
+    } else if (matchType === 'none') {
+        return !(!!inputValue)
+      } else if (matchType === 'any') {
+        return !!inputValue
+      } else if (matchType === 'partialInclusive') {
+        if (!!inputValue) {
+            const result = match({
+              searchString: inputValue,
+              items: values,
+              exact: false,
+              includePartial: true,
+              searchBy: undefined,
+              simpleReturn: undefined
+            })
+            return Array.isArray(result) ? !!result.length : false;    
+      }
+    }
       //multiSearch will return partial match or exact
       //depending on what is specified
       if (!!inputValue) {
           const result = match({
             searchString: inputValue,
+            exact: false,
+            includePartial: false,
             items: values,
             searchBy: undefined,
             simpleReturn: undefined

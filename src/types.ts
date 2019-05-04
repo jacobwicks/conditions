@@ -21,6 +21,7 @@ export enum targetTypes {
 export enum matchTypes {
     exact = 'exact',
     partial = 'partial',
+    partialInclusive = 'partialInclusive',
     none = 'none',
     any = 'any'
 }

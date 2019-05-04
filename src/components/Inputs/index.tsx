@@ -27,29 +27,31 @@ return <Segment>
     input: IInput, 
     index: number
     ) =>
-    <Grid.Row key={`input${index}`}>
+    <Grid.Row key={`inputRow${index}`}>
     <Grid.Column style={{'textAlign':'right'}}>
     <InputName input={input} index={index}/>
     </Grid.Column>
     <Grid.Column style={{'textAlign':'left'}}> 
         <Input 
-        onBlur={({target}: {target: any}) => 
-        dispatch({
-            type: 'save', 
-            index, 
-            value: target.value
-            })}/> 
-            <Button icon 
-            onClick={() => {
-                expressionDispatch({
-                    type: 'deleteTarget',
-                    id: input.id
-                })    
-                dispatch({
-                    type:'delete', 
-                    index
-                    })}
-            }>
+        value={input.value}
+        key={`inputFor${input.id}`}
+        onChange={(e:any, {value}: {value: string}) => dispatch({
+            type: 'save',
+            index,
+            value
+        })}
+        />
+        <Button icon 
+        onClick={() => {
+            expressionDispatch({
+                type: 'deleteTarget',
+                id: input.id
+            })    
+            dispatch({
+                type:'delete', 
+                index
+                })}
+        }>
                 <Icon name='minus'/>
                 </Button>
     </Grid.Column>

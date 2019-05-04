@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { IConditionContent } from '../../../../types';
 import { Grid, Segment, } from 'semantic-ui-react';
-import TargetPicker from '../TargetPicker';
-import MatchTypePicker from '../MatchTypePicker';
+import TargetPicker from '../../../TargetPicker';
+import MatchTypePicker from '../../../MatchTypePicker';
 import ValueEditor from '../ValueEditor';
 import { InputContext } from '../../../../services/InputContext';
 import { IInput } from '../../../../types';
@@ -19,7 +19,10 @@ const Condition = ({
     const input = target && inputs.find((input: IInput) => input.id === target.id)
 return open 
 ? (
-    <Segment style={{color: 'black'}}>
+    <Segment style={{
+        color: 'black',
+        maxWidth: 500
+        }}>
     <Grid celled columns={2}>
         <Grid.Row>
             <Grid.Column width={3}>
@@ -45,7 +48,11 @@ return open
     ? input.name
     : `No target`}</div>
     <div>Match Type: {match && match.type && match.type}</div>
-    <div>Values: {!!values ? 
+    <div>Values: {match && 
+    match.type && 
+    (match.type === 'any' || match.type === 'none') 
+    ? 'N/A'
+    : !!values ? 
     values
     .map((
         value: string, 

@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react';
-import { IAction, IExpression } from '../../types';
+import { IAction, IExpression, IParenthesis } from '../../types';
 import uuidv4 from 'uuid/v4';
 
 const example1: IExpression = [
@@ -99,9 +99,15 @@ const initialState: any = {
       case 'highlight': {
         const { indexes } = action;
         const expression = [...state.expression];
+        console.log(`highlight!`)
+        //clear prior highlights
+        expression.forEach((item: IParenthesis) => item.content.highlight && (item.content.highlight = false))
+        console.log(`highlights cleared`, expression);
+        //highlight requested match
         indexes.forEach((index: number) => {
           expression[index].content.highlight = true
         })
+        console.log(`new highlights added at ${indexes[0]}, ${indexes[1]}`)
         return {
           ...state,
           expression

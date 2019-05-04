@@ -9,7 +9,8 @@ const Parenthesis = ({
   changeOnRightClick,
   doubleClickFn,
   droppableId,
-  isDragging
+  isDragging,
+  ...rest
 } : {
   changeOnRightClick ?: boolean,
   doubleClickFn ?: (droppableId: string, index: number) => void,
@@ -24,6 +25,7 @@ const Parenthesis = ({
   const { expression } = useContext(ExpressionContext).state;
   const { dispatch } = useContext(ExpressionContext);
   const { parenType, highlight } = parenthesis;
+
   const getContent = () => {
     if (parenType === 'close') return ')'
     if (parenType === 'open') return '('
@@ -51,10 +53,10 @@ dispatch({
 })
 }
 
-
+//must spread {...rest} in order for instruction popup to function 
  return (
  <Label size='large'
-            onContextMenu={(e: any) => {
+            onContextMenu={(e: MouseEvent) => {
                 e.preventDefault();
                 if (!changeOnRightClick) return;
               dispatch({
@@ -73,6 +75,7 @@ dispatch({
             content={<Header as='h1' >{getContent()}</Header>}
             onMouseOver={handleMouseOver}
             onMouseLeave={() => !isDragging && dispatch({type: 'highlightCancel'})}
+          {...rest}
           />
 )}
 

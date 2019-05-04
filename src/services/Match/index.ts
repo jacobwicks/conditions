@@ -39,12 +39,22 @@ const getExactMatches = (value: string, target: any[], searchBy: string[]) => {
 
 //returns all objects in target array that match value string
 //either on .name property or any value in tags[string]
-const getMatches = (value: string, target: any[], searchBy: string[]) => {
+const getMatches = (
+  value: string, 
+  target: any[], 
+  searchBy: string[],
+  includePartial?: boolean
+  ) => {
   const re = new RegExp(_.escapeRegExp(value), 'i');
-
+  
   const results = searchBy.reduce((accumulator: any[], property) => {
 
     const isMatch = (item: any) => {
+      
+      if (includePartial) {
+        const re2 = new RegExp(_.escapeRegExp(item), 'i');
+       if (re2.test(value)) return true;
+      }
       if (typeof(item) === 'string') {
         return re.test(item)
       } else if (!item[property]) {
@@ -62,6 +72,8 @@ const getMatches = (value: string, target: any[], searchBy: string[]) => {
     return accumulator;
   }, [])
 
+
+  
   return [...new Set([
     ...results
   ])]
@@ -70,7 +82,12 @@ const getMatches = (value: string, target: any[], searchBy: string[]) => {
 //In the app, value is a searchstring provided by the user
 //here, it's input that we're referring to
 //must change the evaluation flow
-const getAllResults = (values: string[], items: any[], searchBy: string[]) => values
+const getAllResults = (
+  values: string[], 
+  items: any[], 
+  searchBy: string[],
+  includePartial ?: boolean
+  ) => values
 .reduce((accumulator: {
     mustHave: string[],
     results: any[],
@@ -78,6 +95,7 @@ const getAllResults = (values: string[], items: any[], searchBy: string[]) => va
 }, value) => {
   //user requests exact value, but is not a must have
   if (isExact(value)) {
+      console.log(`user requests exact value`, value)
     value = removeQuotesFrom(value);
   accumulator.results = [...new Set([
     ...accumulator.results,
@@ -106,7 +124,7 @@ const getAllResults = (values: string[], items: any[], searchBy: string[]) => va
   //new Set() pulls unique values
   accumulator.results = [...new Set([
     ...accumulator.results,
-    ...getMatches(value, items, searchBy)
+    ...getMatches(value, items, searchBy, includePartial)
   ])];
 }
   return accumulator;
@@ -149,11 +167,15 @@ const getItems = (items: any[]) => {
 
 export const match = ({
   searchString,
+  exact,
+  includePartial,
   items,
   searchBy,
   simpleReturn
 }: {
     searchString: string,
+    exact ?: boolean
+    includePartial ?: boolean,
     items: any,
     searchBy ?: string[],
     simpleReturn ?: string
@@ -164,7 +186,9 @@ export const match = ({
 
   !searchBy && (searchBy = ['plain'])
 
-    const values = searchString
+    const values = exact
+    ?[`"${searchString}"`]
+    : searchString
     .split(" ")
     // eslint-disable-next-line
     .filter(v => {
@@ -175,7 +199,7 @@ export const match = ({
     });
 
       console.log(`getting all results of `, values, items, searchBy);
-    let { results, mustHave, toFilterOut } = getAllResults(values, items, searchBy);
+    let { results, mustHave, toFilterOut } = getAllResults(values, items, searchBy, includePartial);
 
     toFilterOut =  getToFilterOut(toFilterOut, results, searchBy);
 
