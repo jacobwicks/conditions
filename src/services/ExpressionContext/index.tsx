@@ -1,59 +1,39 @@
 import React, { createContext, useReducer } from 'react';
-import { IAction, IExpression, IParenthesis } from '../../types';
+import { IAction, IParenthesis } from '../../types';
 import uuidv4 from 'uuid/v4';
+import { examples } from '../Examples'
+import { loadState } from '../../services/Save';
 
-const example1: IExpression = [
-  {
-    itemType: 'parenthesis',
-    content: {
-        parenType: 'open',
-        highlight: false,
-    }
-  },
-  {
-    itemType: 'operator',
-    content: {
-      operatorType: 'not'
-    }
-  },
-  {
-    itemType: 'condition',
-    content: {
-      conditionId: `string`,
-      target: {
-        id: `1`,
-       },
-      match: {
-        values: [`Yes`],
-        type: `partial`
-      }
-    },
-  },
-  {
-    itemType: 'parenthesis',
-    content: {
-      parenType: 'close',
-      highlight: false,
-    }
-  }
-]
+const getState = () => {
+  const loadResult = loadState();
+  if (!!loadResult.error) {
+      console.error(loadResult.error)
+      const { expression } = examples[0];
+      return expression;
+  } else {
+      console.log(JSON.stringify(loadResult))
+      return loadResult.expression
+  }        
+}
 
 const newOpen = {
   itemType: 'parenthesis',
   content: {
-    parenType: 'open'
+    parenType: 'open',
+    highlight: false,
   }
 }
 
 const newClose = {
   itemType: 'parenthesis',
   content: {
-    parenType: 'close'
+    parenType: 'close',
+    highlight: false,
   }
 }
 
 const initialState: any = {
-  expression: example1
+  expression: getState()
   };
 
   let reducer = (state: any, action: IAction) => {
@@ -99,15 +79,22 @@ const initialState: any = {
       case 'highlight': {
         const { indexes } = action;
         const expression = [...state.expression];
-        console.log(`highlight!`)
+
         //clear prior highlights
         expression.forEach((item: IParenthesis) => item.content.highlight && (item.content.highlight = false))
-        console.log(`highlights cleared`, expression);
+
         //highlight requested match
         indexes.forEach((index: number) => {
           expression[index].content.highlight = true
         })
-        console.log(`new highlights added at ${indexes[0]}, ${indexes[1]}`)
+
+        return {
+          ...state,
+          expression
+        }
+      }
+      case 'load': {
+        const { expression } = action;
         return {
           ...state,
           expression
@@ -118,7 +105,6 @@ const initialState: any = {
         const expression = [...state.expression];
         const condition = expression.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
         condition.content.match.values[index] = value;
-        //condition.content.match.value[index] = value;
 
         return {
           ...state,
@@ -143,14 +129,14 @@ const initialState: any = {
           endIndex
         } = action.payload;
         const expression = [...state.expression];
-        if (startDroppable === 'first' && endDroppable === 'first') {
+        if (startDroppable === 'expression' && endDroppable === 'expression') {
           const moved = expression.splice(startIndex, 1)[0];
           expression.splice(endIndex, 0, moved)
           return {
             ...state,
             expression
           }
-        } else if (startDroppable === 'first' && endDroppable === 'trash'){
+        } else if (startDroppable === 'expression' && endDroppable === 'trash'){
           const { startIndex } = action.payload;
           const expression = [...state.expression];
           expression.splice(startIndex, 1);
@@ -158,7 +144,7 @@ const initialState: any = {
             ...state,
             expression
           }
-        } else if (startDroppable === 'second' && endDroppable === 'first') {
+        } else if (startDroppable === 'newComponents' && endDroppable === 'expression') {
           if (item.itemType === 'parenthesis' && item.content.parenType === 'pair') {
             expression.splice(endIndex, 0, newOpen, newClose)
           } else if (item.itemType === 'conditionPlaceholder') {

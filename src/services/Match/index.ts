@@ -95,7 +95,7 @@ const getAllResults = (
 }, value) => {
   //user requests exact value, but is not a must have
   if (isExact(value)) {
-      console.log(`user requests exact value`, value)
+
     value = removeQuotesFrom(value);
   accumulator.results = [...new Set([
     ...accumulator.results,
@@ -180,7 +180,6 @@ export const match = ({
     searchBy ?: string[],
     simpleReturn ?: string
 }) => {
-  console.log(`match called with `, searchString, items)
   if (!items) return;
   items = getItems(items);
 
@@ -198,7 +197,7 @@ export const match = ({
       }
     });
 
-      console.log(`getting all results of `, values, items, searchBy);
+    //  console.log(`getting all results of `, values, items, searchBy);
     let { results, mustHave, toFilterOut } = getAllResults(values, items, searchBy, includePartial);
 
     toFilterOut =  getToFilterOut(toFilterOut, results, searchBy);

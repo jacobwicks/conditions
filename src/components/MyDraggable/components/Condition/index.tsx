@@ -57,10 +57,17 @@ return open
     .map((
         value: string, 
         index: number
-        ) => 
-    <span key={`value` + index.toString()}>
-    {value}
-    </span>)
+        ) => {
+            if (index < 5) {
+            return <div key={`value` + index.toString()}>
+                {value}
+            </div>
+            }
+            if (index === 5) {
+                return <div key={`value` + index.toString()}>...</div>
+            }
+            return null; 
+        }) 
     : 'no values'}
     </div> 
     </React.Fragment>) 

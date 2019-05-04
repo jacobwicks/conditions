@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { 
+  useContext,
+  useState
+ } from 'react';
 import { 
     Button,
-    Checkbox,
     Divider,
     Grid,
     Header,
@@ -9,6 +11,7 @@ import {
     Label,
     List,
     Modal,
+    Popup
 } from 'semantic-ui-react';
 import ExampleCondition from './components/ExampleCondition';
 import ExampleParenthesis from './components/ExampleParenthesis';
@@ -16,14 +19,18 @@ import ExampleOperator from './components/ExampleOperator';
 import ExampleInputs from './components/ExampleInputs';
 import { IInput } from '../../types';
 import uuidv4 from 'uuid/v4';
+import { InstructionsContext } from '../../services/InstructionsContext';
 
 const InstructionsModal = () => {
-    const [open, setOpen] = useState(false);
-    const [inputs, setInputs] = useState<IInput[]>([{
+  const [modalOpen, setModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [inputs, setInputs] = useState<IInput[]>([{
       id: `1`,
       name: `1`,
       value: ``
   }]);
+
+  const { instructions } = useContext(InstructionsContext).state; 
 
 const addInput = () => {
   const input = {
@@ -61,9 +68,18 @@ const setValue = ({index, value} : {index: number, value: string}) => {
   target.value = value;
   setInputs(newInputs);
 }
-  
-return (
-<Modal trigger={<Button circular icon='question' />}>
+
+const triggerButton = <Button onClick={() => setModalOpen(!modalOpen)} circular icon='question'/>
+
+return(
+<Modal 
+open={modalOpen} 
+trigger={
+  instructions 
+  ? <Popup trigger={triggerButton} content={`Opens the Instructions menu`}/> 
+  : triggerButton} 
+  onClose={() => setModalOpen(false)}
+  >
 <Modal.Header>Logical Expression Creator</Modal.Header>
 <Modal.Content scrolling>
   <Modal.Description>

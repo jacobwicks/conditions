@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import MyDroppable from '../MyDroppable';
 import { ExpressionContext } from '../../services/ExpressionContext';
-import { IInsertables } from '../../types';
+import { INewComponents } from '../../types';
 
-const insertables: IInsertables = [
+const newComponents: INewComponents = [
       {
           itemType: 'conditionPlaceholder',
       },
@@ -45,27 +45,27 @@ const insertables: IInsertables = [
 ]
 
 
-const Insertables = () => {
+const NewComponents = () => {
   const { dispatch } = useContext(ExpressionContext)
   const doubleClickFn = (droppableId: string, index: number) => {
       dispatch({
         type: 'insertNew',
         payload: {
-          item: insertables[index]
+          item: newComponents[index]
         }
       })
     }
 
   return (
     <MyDroppable
-    droppableId={'second'}
+    droppableId={'newComponents'}
     direction={'horizontal'}
     doubleClickFn={doubleClickFn}
     header={`New Components - double click or drag and drop to add`}
     height={200}
-    items={insertables}
+    items={newComponents}
     />
   )}
 
 
-export default Insertables;
+export default NewComponents;

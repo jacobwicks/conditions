@@ -1,9 +1,16 @@
 import React, { createContext, useReducer } from 'react';
 import { IAction } from '../../types';
+import { loadInstructionState } from '../../services/Save' 
 
-
+const getState = () => {
+  const loaded = loadInstructionState();
+ if (loaded.error) {
+   return true;
+ }
+ return loaded;
+}
 const initialState: any = {
-    instructions: true
+    instructions: getState()
 }
 
 

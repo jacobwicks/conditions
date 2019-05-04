@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { Header, Label } from 'semantic-ui-react';
 import { ExpressionContext } from '../../../../services/ExpressionContext'
 import { getMatch } from '../../../../services/ParenthesisMatch';
+import { InputContext } from '../../../../services/InputContext';
+import { evaluateExpression } from '../../../../services/EvaluateExpression';
 
 const Parenthesis = ({
   parenthesis,
@@ -22,10 +24,24 @@ const Parenthesis = ({
     parenType: 'open' | 'close' | 'pair',
   }
 }) => {
-  const { expression } = useContext(ExpressionContext).state;
-  const { dispatch } = useContext(ExpressionContext);
+  const { state, dispatch } = useContext(ExpressionContext);
+  const { expression } = state;
+  const { inputs } = useContext(InputContext).state;
+
   const { parenType, highlight } = parenthesis;
 
+  const getContainedExpressionValue = (index: number, matchIndex: number) => {
+    const lower = Math.min(index, matchIndex) + 1;
+    const higher = Math.max(index, matchIndex);
+    const containedExpression = expression.slice(lower, higher);
+
+    const value = evaluateExpression({
+      expression: containedExpression,
+      inputs
+    })
+
+    return value;
+}
   const getContent = () => {
     if (parenType === 'close') return ')'
     if (parenType === 'open') return '('
@@ -33,16 +49,20 @@ const Parenthesis = ({
   }
 
 const getColor = () => {
-  if (droppableId !== 'first') return 'yellow'
-  if (getMatch(index, expression) === undefined) return 'grey'
+  if (droppableId !== 'expression') return 'yellow'
 
-  return highlight
-    ? 'purple'
-    : 'yellow'
+  const matchIndex = getMatch(index, expression);
+  if (matchIndex === undefined) return 'grey'
+  if (highlight) return 'purple';
+
+  const containedExpressionValue = getContainedExpressionValue(index, matchIndex)  
+  if (containedExpressionValue === true) return 'green'
+  if (containedExpressionValue === false) return 'red'
+  return 'yellow'
 }
 
 const handleMouseOver = () => {
-if (droppableId !== 'first') return;
+if (droppableId !== 'expression') return;
 if (highlight) return;
 
 const match = getMatch(index, expression);

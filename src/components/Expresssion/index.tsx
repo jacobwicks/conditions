@@ -35,7 +35,7 @@ return (
 changeOnRightClick={true}
 doubleClickFn={doubleClickFn}
 direction={'horizontal'}
-droppableId={'first'}
+droppableId={'expression'}
 header={`Your Expression ${noConditions 
   ? `has no conditions` 
   : noTargets ? `has no valid targets`

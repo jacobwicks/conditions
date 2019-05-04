@@ -5,8 +5,8 @@ import {
   ICondition, 
   IOperator, 
   IParenthesis, 
-  IInsertableConditionPlaceholder, 
-  IInsertableParenthesis 
+  INewConditionPlaceholder, 
+  INewParenthesis 
 } from '../../types'
 
 const MyDraggable = ({
@@ -20,7 +20,7 @@ const MyDraggable = ({
   doubleClickFn?: (droppableId: string, index: number) => void,
   droppableId: string,
   changeOnRightClick?: boolean,
-  item: ICondition | IOperator | IParenthesis | IInsertableConditionPlaceholder | IInsertableParenthesis,
+  item: ICondition | IOperator | IParenthesis | INewConditionPlaceholder | INewParenthesis,
   draggableId: string,
   index: number,
 }) =>

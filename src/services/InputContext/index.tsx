@@ -1,6 +1,20 @@
 import React, { createContext, useReducer } from 'react';
 import uuidv4 from 'uuid/v4';
 import { IAction, IInput } from '../../types';
+import { examples } from '../Examples'
+import { loadState } from '../../services/Save';
+
+const getState = () => {
+  const loadResult = loadState();
+  if (!!loadResult.error) {
+      console.error(loadResult.error)
+      const { inputs } = examples[0];
+      return inputs;
+  } else {
+      console.log(JSON.stringify(loadResult))
+      return loadResult.inputs
+  }        
+}
 
 const nameExists = (inputs: IInput[], name: string) => inputs.some((input: IInput) => input.name === name)
 
@@ -12,32 +26,13 @@ const getName = (inputs: IInput[], name: string) => {
 }
 
 const initialState: any = {
-    inputs: [
-        {
-            id: '1',
-            name: '1',
-            value: ''
-        }
-    ],
+    inputs: getState(),
     renameFailed: false
 }
 
 
   let reducer = (state: any, action: IAction) => {
     switch (action.type) {
-      case 'new':{
-          const newInput = {
-              id: uuidv4(),
-              name: getName(state.inputs, (state.inputs.length + 1).toString()),
-              value: ''
-          }
-          const inputs = [...state.inputs];
-          inputs.push(newInput);
-          return {
-              ...state,
-              inputs
-          };
-      }
       case 'delete':{
           const { index } = action;
           const inputs = [...state.inputs];
@@ -47,6 +42,26 @@ const initialState: any = {
               inputs
           }
       }
+      case 'load':{
+        const { inputs } = action;
+        return {
+            ...state,
+            inputs
+        };
+    }
+      case 'new':{
+        const newInput = {
+            id: uuidv4(),
+            name: getName(state.inputs, (state.inputs.length + 1).toString()),
+            value: ''
+        }
+        const inputs = [...state.inputs];
+        inputs.push(newInput);
+        return {
+            ...state,
+            inputs
+        };
+    }
       case 'rename':{
           const { index, name } = action;
           

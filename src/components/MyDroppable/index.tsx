@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import {
   Header,
   Segment
@@ -21,7 +21,7 @@ const MyDroppable = ({
   direction?: keyof typeof directions,
   doubleClickFn?: (droppableId: string, index: number) => void,
   droppableId: string,
-  header?: string,
+  header?: string | ReactElement,
   height?: number,
   items: any[],
 }) =>

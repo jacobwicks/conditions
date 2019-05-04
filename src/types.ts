@@ -71,18 +71,18 @@ export interface ITarget {
   id: string,
 }
 
-export interface IInsertableConditionPlaceholder {
+export interface INewConditionPlaceholder {
   itemType: 'conditionPlaceholder'
 }
 
-export interface IInsertableParenthesis {
+export interface INewParenthesis {
   itemType: 'parenthesis',
   content: {
     parenType: 'pair' | 'open' | 'close'
   }
 }
 
-export interface IInsertables extends Array<IInsertableConditionPlaceholder | IOperator | IInsertableParenthesis>{}
+export interface INewComponents extends Array<INewConditionPlaceholder | IOperator | INewParenthesis>{}
 
 
 export interface IAction {

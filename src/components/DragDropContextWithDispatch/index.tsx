@@ -9,7 +9,7 @@ const DragDropContextWithDispatch = (props: any) => {
       <DragDropContext
       onDragEnd={(result: DropResult) => {
         const { destination, source, draggableId } = result;
-        if (source.droppableId === 'first') dispatch({type: 'highlightCancel'})
+        if (source.droppableId === 'expression') dispatch({type: 'highlightCancel'})
         const { droppableId: startDroppable, index: startIndex } = source;
         const { droppableId: endDroppable = null, index: endIndex = null, } = destination || {};
         const item = JSON.parse(JSON.parse(draggableId).item);
