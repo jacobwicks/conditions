@@ -1,7 +1,7 @@
 import { 
     ICondition,
     IInput, 
-    IItems,
+    IExpression,
     IParenthesis, 
     IOperator 
 } from '../../types';
@@ -68,7 +68,7 @@ export const evaluateExpression = ({
     expression, 
     inputs
 } : {
-    expression: IItems,
+    expression: IExpression,
     inputs: IInput[]
 }) => {
     // 1. While there are still tokens to be read in,
@@ -76,7 +76,7 @@ export const evaluateExpression = ({
     //    1.1 Get the next token.
     .reduce((acc: {
         values: (boolean | undefined)[],
-        operators: IItems
+        operators: IExpression
     }, item) => {
         const operators = acc.operators;
         const values = acc.values;
@@ -88,7 +88,7 @@ export const evaluateExpression = ({
         const { conditionId }  = item.content;  
         const value = conditionValue ({
             conditionId,
-            items: expression,
+            expression,
             inputs
         })
         values.push(value);

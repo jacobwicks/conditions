@@ -1,12 +1,23 @@
 import React, { useContext} from 'react';
-import { ItemContext } from '../../../../services/ItemContext';
+import { ExpressionContext } from '../../../../services/ExpressionContext';
 import { Grid, Button, Icon} from 'semantic-ui-react';
 import ValueInput from './components/ValueInput';
+import { 
+    ICondition, 
+    IOperator, 
+    IParenthesis
+} from '../../../../types';
 
 const ValueEditor = ({conditionId}:{conditionId: string}) => {
-    const { dispatch } = useContext(ItemContext); 
-    const { items } = useContext(ItemContext).state;
-    const { values } = items.find((item: any) => item.content.conditionId === conditionId).content.match;
+    const { dispatch } = useContext(ExpressionContext); 
+    const { expression } = useContext(ExpressionContext).state;
+    const { values } = expression.find((item: ICondition | IParenthesis |IOperator) => {
+        if (item.itemType === 'condition') {
+            if (item.content.conditionId === conditionId) {
+                return true
+            } else return false;
+        } else return false;             
+}).content.match;
 
 return (
 <Grid.Row>

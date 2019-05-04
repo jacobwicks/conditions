@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from 'react';
 import uuidv4 from 'uuid/v4';
-import { IInput } from '../../types';
+import { IAction, IInput } from '../../types';
 
 const nameExists = (inputs: IInput[], name: string) => inputs.some((input: IInput) => input.name === name)
 
@@ -10,8 +10,6 @@ const getName = (inputs: IInput[], name: string) => {
     } 
     return name;       
 }
-
-
 
 const initialState: any = {
     inputs: [
@@ -25,7 +23,7 @@ const initialState: any = {
 }
 
 
-  let reducer = (state: any, action: any) => {
+  let reducer = (state: any, action: IAction) => {
     switch (action.type) {
       case 'new':{
           const newInput = {
@@ -95,29 +93,3 @@ return (
 )}
 
   export { InputContext, InputProvider }
-
-
-// import React, { createContext, useReducer } from 'react';
-
-
-
-// let reducer = (state: any, action: any) => {
-//     switch(action.type) {
-//         case 'new' : {
-//             return state
-//         }
-//         default: 
-//         throw new Error();
-//     }
-// }
-
-// const InputContext = createContext(initialState);
-// const InputProvider = (props: any) => {
-//     const [state, dispatch] = useReducer(reducer, initialState);
-// return (
-//   <InputContext.Provider value={{state, dispatch}}>
-//   {props.children}
-// </InputContext.Provider>
-// )}
-
-// export { InputContext, InputProvider }

@@ -1,15 +1,15 @@
 import React from 'react';
-import { ItemProvider } from '../../services/ItemContext';
+import { ExpressionProvider } from '../../services/ExpressionContext';
 import { InputProvider } from '../../services/InputContext';
 
 const Providers = (props: any) => 
-<ItemProvider
+<ExpressionProvider
 {...props}
 >
 <InputProvider
 {...props}
 >
 </InputProvider>
-</ItemProvider>
+</ExpressionProvider>
 
 export default Providers;

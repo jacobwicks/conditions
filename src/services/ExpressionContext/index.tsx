@@ -1,8 +1,8 @@
 import React, { createContext, useReducer } from 'react';
-import { IItems } from '../../types';
+import { IAction, IExpression } from '../../types';
 import uuidv4 from 'uuid/v4';
 
-const items: IItems = [
+const example1: IExpression = [
   {
     itemType: 'parenthesis',
     content: {
@@ -53,65 +53,79 @@ const newClose = {
 }
 
 const initialState: any = {
-  items
+  expression: example1
   };
 
-  let reducer = (state: any, action: any) => {
+  let reducer = (state: any, action: IAction) => {
     switch (action.type) {
       case 'addValue': {
         const { conditionId } = action;
-        const items = [...state.items];
-        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        const expression = [...state.expression];
+        const condition = expression.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
 
         condition.content.match.values.push('');
 
         return {
           ...state,
-          items
+          expression
+        }
+      }
+      case 'deleteTarget': {
+        const targetId = action.id;
+        const expression = [...state.expression];
+        expression.forEach(item => {
+          if (item.itemType === 'condition' && item.content.target.id === targetId) {
+            item.content.target.id = undefined;
+          }
+        })
+
+        return {
+          ...state,
+          expression
         }
       }
       case 'deleteValue': {
         const { conditionId, index } = action;
-        const items = [...state.items];
-        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        const expression = [...state.expression];
+        const condition = expression.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
 
         condition.content.match.values.splice(index, 1);
 
         return {
           ...state,
-          items
+          expression
         }
       }
       case 'highlight': {
         const { indexes } = action;
-        const items = [...state.items];
+        const expression = [...state.expression];
         indexes.forEach((index: number) => {
-          items[index].content.highlight = true
+          expression[index].content.highlight = true
         })
         return {
           ...state,
-          items
+          expression
         }
       }
       case 'setValue': {
         const { conditionId, index, value } = action;
-        const items = [...state.items];
-        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        const expression = [...state.expression];
+        const condition = expression.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
         condition.content.match.values[index] = value;
         //condition.content.match.value[index] = value;
 
         return {
           ...state,
-          items
+          expression
         }
       }
       case 'delete': {
         const { index } = action.payload;
-        const items = [...state.items];
-        items.splice(index, 1);
+        const expression = [...state.expression];
+        expression.splice(index, 1);
         return {
           ...state,
-          items
+          expression
         }
       }
       case 'drag': {
@@ -122,25 +136,25 @@ const initialState: any = {
           endDroppable,
           endIndex
         } = action.payload;
-        const items = [...state.items];
+        const expression = [...state.expression];
         if (startDroppable === 'first' && endDroppable === 'first') {
-          const moved = items.splice(startIndex, 1)[0];
-          items.splice(endIndex, 0, moved)
+          const moved = expression.splice(startIndex, 1)[0];
+          expression.splice(endIndex, 0, moved)
           return {
             ...state,
-            items
+            expression
           }
         } else if (startDroppable === 'first' && endDroppable === 'trash'){
           const { startIndex } = action.payload;
-          const items = [...state.items];
-          items.splice(startIndex, 1);
+          const expression = [...state.expression];
+          expression.splice(startIndex, 1);
           return {
             ...state,
-            items
+            expression
           }
         } else if (startDroppable === 'second' && endDroppable === 'first') {
           if (item.itemType === 'parenthesis' && item.content.parenType === 'pair') {
-            items.splice(endIndex, 0, newOpen, newClose)
+            expression.splice(endIndex, 0, newOpen, newClose)
           } else if (item.itemType === 'conditionPlaceholder') {
             const condition = {
               itemType: 'condition',
@@ -156,13 +170,13 @@ const initialState: any = {
                 }
               },
             }
-            items.splice(endIndex, 0, condition);
+            expression.splice(endIndex, 0, condition);
           } else {
-            items.splice(endIndex, 0, item);
+            expression.splice(endIndex, 0, item);
           }
             return {
               ...state,
-              items
+              expression
             }
 ;
         } else {
@@ -172,13 +186,13 @@ const initialState: any = {
       case 'insertNew': {
         const { item } = action.payload;
         const { itemType } = item;
-        const items = [...state.items]
+        const expression = [...state.expression]
         if (itemType === 'parenthesis' && item.content.parenType === 'pair' ) {
 
-          items.splice(0, 0, newOpen, newClose)
+          expression.splice(0, 0, newOpen, newClose)
           return {
             ...state,
-            items
+            expression
           }
         } else if (itemType === 'conditionPlaceholder') {
           const condition = {
@@ -194,16 +208,16 @@ const initialState: any = {
               }
             },
         }
-        items.splice(0,0, condition)
+        expression.splice(0,0, condition)
         return {
           ...state,
-          items
+          expression
         }
       } else {
-        items.splice(0,0,item)
+        expression.splice(0,0,item)
         return {
           ...state,
-          items
+          expression
         }
       }
       }
@@ -213,49 +227,49 @@ const initialState: any = {
           matchType
         } = action;
 
-        const items = [...state.items];
-        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        const expression = [...state.expression];
+        const condition = expression.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
 
         condition.content.match.type = matchType;
 
         return {
           ...state,
-          items
+          expression
         }
       }
       case 'highlightCancel': {
-        const items = [...state.items];
-        items.forEach((item:any) => {
+        const expression = [...state.expression];
+        expression.forEach((item:any) => {
           if (item.content.hasOwnProperty('highlight')) {
             item.content.highlight = false;
           }
         })
         return {
           ...state,
-          items
+          expression
         }
       }
       case 'targetSelect' : {
         const { conditionId, targetId } = action;
-        const items = [...state.items];
-        const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
+        const expression = [...state.expression];
+        const condition = expression.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
 
         condition.content.target.id = targetId;
 
         return {
           ...state,
-          items
+          expression
         }
       }
       case 'toggle': {
           const { index } = action.payload;
-          let target = state.items[index];
+          let target = state.expression[index];
           target = toggle(target);
-          const items = [...state.items];
-          items[index] = target;
+          const expression = [...state.expression];
+          expression[index] = target;
           return {
               ...state,
-              items
+              expression
             };
       }
       default:
@@ -263,16 +277,16 @@ const initialState: any = {
     }
   }
 
-  const ItemContext = createContext(initialState);
-  const ItemProvider = (props: any) => {
+  const ExpressionContext = createContext(initialState);
+  const ExpressionProvider = (props: any) => {
       const [state, dispatch] = useReducer(reducer, initialState);
 return (
-    <ItemContext.Provider value={{state, dispatch}}>
+    <ExpressionContext.Provider value={{state, dispatch}}>
     {props.children}
-  </ItemContext.Provider>
+  </ExpressionContext.Provider>
 )}
 
-  export { ItemContext, ItemProvider }
+  export { ExpressionContext, ExpressionProvider }
 
   const toggle = (target: any) => {
       const { itemType, content } = target;

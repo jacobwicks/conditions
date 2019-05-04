@@ -1,12 +1,22 @@
-import React, { Fragment, useContext, useState } from 'react';
-import { Button, Grid, Icon, Header, Input, Segment } from 'semantic-ui-react';
+import React, { useContext } from 'react';
+import { 
+    Button, 
+    Grid, 
+    Icon, 
+    Header, 
+    Input, 
+    Segment 
+} from 'semantic-ui-react';
 import { InputContext } from '../../services/InputContext';
-
+import { ExpressionContext } from '../../services/ExpressionContext';
+import { IInput } from '../../types';
+import InputName from './components/InputName';
 
 const Inputs = () => {
     const { dispatch } = useContext(InputContext);
     const { inputs } = useContext(InputContext).state;
-    
+    const expressionDispatch = useContext(ExpressionContext).dispatch;
+
 return <Segment>
     <Header as='h2'>Inputs</Header>
     <Button icon onClick={() => dispatch({type: 'new'})}><Icon name='plus'/></Button>
@@ -14,7 +24,7 @@ return <Segment>
     <Grid celled columns={2}>
     {inputs
 .map((
-    input:any, 
+    input: IInput, 
     index: number
     ) =>
     <Grid.Row key={`input${index}`}>
@@ -30,11 +40,16 @@ return <Segment>
             value: target.value
             })}/> 
             <Button icon 
-            onClick={() => 
-            dispatch({
-                type:'delete', 
-                index
-                })}>
+            onClick={() => {
+                expressionDispatch({
+                    type: 'deleteTarget',
+                    id: input.id
+                })    
+                dispatch({
+                    type:'delete', 
+                    index
+                    })}
+            }>
                 <Icon name='minus'/>
                 </Button>
     </Grid.Column>
@@ -43,35 +58,6 @@ return <Segment>
  </Grid>
 </Segment>
 }
+
 export default Inputs;
-
-const InputName = ({input, index}:{input:any, index:number}) =>{
-    const { dispatch } = useContext(InputContext);
-    const [open, setOpen] = useState(false);
-    const [temp, setTemp] = useState(input.name);
-    const handleBlur = (value:string) => {
-        setOpen(false);
-        dispatch({type: 'rename', name: value, index})
-    }
-    return open
-    ?   <Fragment>
-    <Button icon onClick={() => setOpen(!open)}><Icon name='edit'/></Button>
-    <Input 
-    onKeyPress={({key}:{key: string}) => {
-        if (key === 'Enter') {
-             //@ts-ignore
-            !!temp && handleBlur(temp)
-        }
-    }}
-     value={temp}
-     onChange={(e) => setTemp(e.target.value)}
-     onBlur={(e: any) => handleBlur(e.target.value)}
-
-    />
-    </Fragment>
-    : <Fragment>
-        <Button icon onClick={() => setOpen(!open)}><Icon name='edit'/></Button>
-        {input.name}:
-        </Fragment>
-}
 

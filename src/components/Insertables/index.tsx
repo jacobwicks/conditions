@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import MyDroppable from '../MyDroppable';
-import { ItemContext } from '../../services/ItemContext';
+import { ExpressionContext } from '../../services/ExpressionContext';
+import { IInsertables } from '../../types';
 
-const insertables: any[] = [
+const insertables: IInsertables = [
       {
           itemType: 'conditionPlaceholder',
       },
@@ -45,7 +46,7 @@ const insertables: any[] = [
 
 
 const Insertables = () => {
-  const { dispatch } = useContext(ItemContext)
+  const { dispatch } = useContext(ExpressionContext)
   const doubleClickFn = (droppableId: string, index: number) => {
       dispatch({
         type: 'insertNew',

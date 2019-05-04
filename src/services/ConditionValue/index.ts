@@ -1,20 +1,34 @@
 import { match } from '../Match';
-import { ICondition, IInput } from '../../types';
+import { ICondition, IInput, IExpression, IOperator, IParenthesis } from '../../types';
 
 export const conditionValue = ({
     conditionId,
-    items,
+    expression,
     inputs
 }: {
     conditionId: string
-    items: any[],
+    expression: IExpression,
     inputs: any[]
 }) => {
-    const condition = items.find((item: ICondition) => item.content.conditionId === conditionId)
+   // const condition = expression.find((item: ICondition) => item.content.conditionId === conditionId)
+
+    const condition = expression.find((item: ICondition | IParenthesis |IOperator) => {
+      if (item.itemType === 'condition') {
+          if (item.content.conditionId === conditionId) {
+              return true
+          } else return false;
+      } else return false;             
+});
+    
+    //@ts-ignore
     const { id } = condition.content.target;
     if (!id) return undefined;
+    if (!inputs || inputs.length === 0) return undefined;
+    console.log(`before I crash, id is ${id} and inputs is`, inputs)
     const inputValue = inputs.find((input: IInput) => input.id === id).value;
+    //@ts-ignore
     const matchType = condition.content.match.type;
+    //@ts-ignore
     let { values } = condition.content.match;
     
     if (matchType === 'exact') {

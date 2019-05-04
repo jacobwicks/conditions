@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Header, Label } from 'semantic-ui-react';
-import { ItemContext } from '../../../../services/ItemContext'
+import { ExpressionContext } from '../../../../services/ExpressionContext'
 import { getMatch } from '../../../../services/ParenthesisMatch';
 
 const Parenthesis = ({
@@ -21,8 +21,8 @@ const Parenthesis = ({
     parenType: 'open' | 'close' | 'pair',
   }
 }) => {
-  const expression = useContext(ItemContext).state.items;
-  const { dispatch } = useContext(ItemContext);
+  const { expression } = useContext(ExpressionContext).state;
+  const { dispatch } = useContext(ExpressionContext);
   const { parenType, highlight } = parenthesis;
   const getContent = () => {
     if (parenType === 'close') return ')'

@@ -30,10 +30,8 @@ export interface IMatch {
     type: keyof typeof matchTypes
 }
 
-export interface IItems extends Array<IParenthesis | IOperator | ICondition>{}
+export interface IExpression extends Array<IParenthesis | IOperator | ICondition>{}
 
-// export interface IExpression extends
-//export interface IItems extends Array<IParenthesis | IOperator | ICondition>{}
 
 export interface IInput {
   id: string,
@@ -70,4 +68,23 @@ export interface IConditionContent {
 
 export interface ITarget {
   id: string,
+}
+
+export interface IInsertableConditionPlaceholder {
+  itemType: 'conditionPlaceholder'
+}
+
+export interface IInsertableParenthesis {
+  itemType: 'parenthesis',
+  content: {
+    parenType: 'pair' | 'open' | 'close'
+  }
+}
+
+export interface IInsertables extends Array<IInsertableConditionPlaceholder | IOperator | IInsertableParenthesis>{}
+
+
+export interface IAction {
+  type: string,
+  [key: string] : any
 }

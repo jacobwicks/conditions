@@ -1,19 +1,37 @@
-import React, { useContext } from 'react';
-import { Dropdown } from 'semantic-ui-react';
+import React, { 
+    Fragment, 
+    useContext 
+} from 'react';
+import {
+    Button,
+    Dropdown,
+    Icon,
+ } from 'semantic-ui-react';
 import { InputContext, } from '../../../../services/InputContext';
-import { ItemContext } from '../../../../services/ItemContext';
-import { IInput } from '../../../../types';
+import { ExpressionContext } from '../../../../services/ExpressionContext';
+import { 
+    ICondition, 
+    IInput,
+    IOperator,
+    IParenthesis
+ } from '../../../../types';
 
 const TargetPicker = ({conditionId}: {conditionId: string}) => {
-    const { dispatch } = useContext(ItemContext);
-    const { items } = useContext(ItemContext).state;
+    const { dispatch } = useContext(ExpressionContext);
+    const { expression } = useContext(ExpressionContext).state;
     const { inputs } = useContext(InputContext).state;
-    const targetId = items.find((item: any) => item.content.conditionId === conditionId).content.target.id;
+    const targetId = expression.find((item: ICondition | IParenthesis |IOperator) => {
+        if (item.itemType === 'condition') {
+            if (item.content.conditionId === conditionId) {
+                return true
+            } else return false;
+        } else return false;             
+}).content.target.id;
     const text = targetId 
     ? inputs.find((input: IInput) => input.id === targetId).name 
     : `no target`
 
-    const options = inputs.map((input: any) => {
+    const options = inputs.map((input: IInput) => {
         const { name, id } = input;
         return {
             key: name,
@@ -23,6 +41,7 @@ const TargetPicker = ({conditionId}: {conditionId: string}) => {
     })
 
     return   (
+        <Fragment>
         <Dropdown
         onChange={(e, {value}) => typeof(value) === 'string' && dispatch({
             type: 'targetSelect',
@@ -36,6 +55,13 @@ const TargetPicker = ({conditionId}: {conditionId: string}) => {
         search
         text={text}
       />
+      <Button onClick={() => dispatch({
+        type: 'targetSelect', 
+        conditionId,
+        targetId: undefined
+        })}
+        icon><Icon name='delete'/></Button>
+    </Fragment>
 )}
 
 export default TargetPicker;

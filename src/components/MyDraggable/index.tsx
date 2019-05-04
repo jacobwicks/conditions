@@ -1,6 +1,13 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import DraggableContent from './components/DraggableContent';
+import { 
+  ICondition, 
+  IOperator, 
+  IParenthesis, 
+  IInsertableConditionPlaceholder, 
+  IInsertableParenthesis 
+} from '../../types'
 
 const MyDraggable = ({
   item,
@@ -13,7 +20,7 @@ const MyDraggable = ({
   doubleClickFn?: (droppableId: string, index: number) => void,
   droppableId: string,
   changeOnRightClick?: boolean,
-  item: any,
+  item: ICondition | IOperator | IParenthesis | IInsertableConditionPlaceholder | IInsertableParenthesis,
   draggableId: string,
   index: number,
 }) =>

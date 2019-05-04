@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import { ItemContext } from '../../services/ItemContext';
+import { ExpressionContext } from '../../services/ExpressionContext';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 const DragDropContextWithDispatch = (props: any) => {
-    const { dispatch } = useContext(ItemContext);
+    const { dispatch } = useContext(ExpressionContext);
 
     return (
       <DragDropContext

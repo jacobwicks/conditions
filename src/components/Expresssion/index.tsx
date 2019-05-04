@@ -1,29 +1,29 @@
 import React, { useContext } from 'react';
 import MyDroppable from '../MyDroppable';
-import { ItemContext } from '../../services/ItemContext';
+import { ExpressionContext } from '../../services/ExpressionContext';
 import { evaluateExpression } from '../../services/EvaluateExpression';
 import { InputContext } from '../../services/InputContext';
 import { parenthesisMatch } from '../../services/ParenthesisMatch';
-import { IItems } from '../../types';
+import { IExpression } from '../../types';
 
-const hasCondition = (expression : IItems) => expression.some(item => item.itemType === 'condition')
-const hasTarget = (expression: IItems) => expression.some(item => item.itemType === 'condition' && !!item.content.target.id)
+const hasCondition = (expression : IExpression) => expression.some(item => item.itemType === 'condition')
+const hasTarget = (expression: IExpression) => expression.some(item => item.itemType === 'condition' && !!item.content.target.id)
 
 const Expression = () => {
-const { dispatch } = useContext(ItemContext);
-const { items } = useContext(ItemContext).state;
+const { dispatch } = useContext(ExpressionContext);
+const { expression } = useContext(ExpressionContext).state;
 const { inputs } = useContext(InputContext).state;
 
-const matched = parenthesisMatch(items);  
-const noConditions = !hasCondition(items);
-const noTargets = !hasTarget(items);
+const matched = parenthesisMatch(expression);  
+const noConditions = !hasCondition(expression);
+const noTargets = !hasTarget(expression);
 
 const value = evaluateExpression({
-  expression: items,
+  expression,
   inputs
 })
 const doubleClickFn = (droppableId: string, index: number) => {
-  if (items[index].itemType !== 'condition') {
+  if (expression[index].itemType !== 'condition') {
     dispatch({
       type: 'delete',
       payload: {index}
@@ -43,7 +43,7 @@ header={`Your Expression ${noConditions
       ? `unparseable due to mismatched parenthesis` 
       : value}`}`}
 height={400}
-items={items}
+items={expression}
 />
 )}
 

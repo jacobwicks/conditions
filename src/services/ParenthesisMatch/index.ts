@@ -1,4 +1,4 @@
-import { IItems, IParenthesis, IOperator, ICondition } from '../../types';
+import { IExpression, IParenthesis, IOperator, ICondition } from '../../types';
 
 interface IParenthesisWithIndex extends IParenthesis {
   index: number,
@@ -14,7 +14,7 @@ const matches = (topOfStack: IParenthesisWithIndex, closedParenthesis: IParenthe
 topOfStack.content.parenType === 'open' &&
 closedParenthesis.content.parenType === 'close'
 
-export const parenthesisMatch = (expression: IItems) =>
+export const parenthesisMatch = (expression: IExpression) =>
 !expression
 ? true
 : !(!!expression
@@ -41,7 +41,7 @@ export const parenthesisMatch = (expression: IItems) =>
   return stack;
 }, []).length)
 
-export const getMatch = (myIndex: number, expression: IItems) => {
+export const getMatch = (myIndex: number, expression: IExpression) => {
   if (myIndex > expression.length -1) {
     //console.log(`myIndex ${myIndex} greater than expression length ${expression.length}`, expression)
     return undefined;
