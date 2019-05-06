@@ -13,9 +13,9 @@ const MyDraggable = ({
   doubleClickFn?: (droppableId: string, index: number) => void,
   droppableId: string,
   changeOnRightClick?: boolean,
-    item: any,
-    draggableId: string,
-    index: number
+  item: any,
+  draggableId: string,
+  index: number,
 }) =>
 <Draggable
   draggableId={draggableId}

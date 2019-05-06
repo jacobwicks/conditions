@@ -23,7 +23,7 @@ const MyDroppable = ({
   droppableId: string,
   header?: string,
   height?: number,
-  items: any[]
+  items: any[],
 }) =>
 <Droppable
   droppableId={droppableId}
@@ -41,17 +41,17 @@ const MyDroppable = ({
           inverted={snapshot.isDraggingOver}
           tertiary={snapshot.isDraggingOver}
           >
-          <Header 
+          <Header
          as='h3'
         >
           {header}
           </Header>
         <div
-          style={direction === 'horizontal' 
+          style={direction === 'horizontal'
           ? {display:'flex'}
           : undefined}
           ref={provided.innerRef}
-        > 
+        >
           {items && items
           .map((item : any, index: number) =>
             <MyDraggable

@@ -3,9 +3,11 @@ export enum colors {
     red = "red",
     yellow = "yellow",
     orange = 'orange',
-    green = 'green'
+    green = 'green',
+    purple = 'purple',
+    grey = 'grey'
   }
-  
+
 export enum directions {
   horizontal = 'horizontal',
   vertical = 'vertical'
@@ -30,7 +32,7 @@ export interface IMatch {
 
 export interface IItems extends Array<IParenthesis | IOperator | ICondition>{}
 
-// export interface IExpression extends 
+// export interface IExpression extends
 //export interface IItems extends Array<IParenthesis | IOperator | ICondition>{}
 
 export interface IInput {
@@ -42,7 +44,8 @@ export interface IInput {
 export interface IParenthesis {
     itemType: 'parenthesis',
     content: {
-        parenType: 'open' | 'close'
+        parenType: 'open' | 'close' | 'pair',
+        highlight?: boolean
     }
 }
 
@@ -63,9 +66,8 @@ export interface IConditionContent {
   open ?: boolean,
   target: ITarget,
   match: IMatch,
-}  
+}
 
 export interface ITarget {
   id: string,
 }
-

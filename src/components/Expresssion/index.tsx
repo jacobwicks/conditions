@@ -5,6 +5,7 @@ import { ItemContext } from '../../services/ItemContext';
 const Expression = () => {
 const { dispatch } = useContext(ItemContext);
 const { items } = useContext(ItemContext).state;
+
 const doubleClickFn = (droppableId: string, index: number) => {
   if (items[index].itemType !== 'condition') {
     dispatch({
@@ -12,7 +13,7 @@ const doubleClickFn = (droppableId: string, index: number) => {
       payload: {index}
     })
   }}
-  
+
 return (
 <MyDroppable
 changeOnRightClick={true}

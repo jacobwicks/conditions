@@ -6,7 +6,8 @@ const items: IItems = [
   {
     itemType: 'parenthesis',
     content: {
-        parenType: 'open'
+        parenType: 'open',
+        highlight: false,
     }
   },
   {
@@ -31,7 +32,8 @@ const items: IItems = [
   {
     itemType: 'parenthesis',
     content: {
-      parenType: 'close'
+      parenType: 'close',
+      highlight: false,
     }
   }
 ]
@@ -60,7 +62,7 @@ const initialState: any = {
         const { conditionId } = action;
         const items = [...state.items];
         const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
-        
+
         condition.content.match.values.push('');
 
         return {
@@ -72,9 +74,20 @@ const initialState: any = {
         const { conditionId, index } = action;
         const items = [...state.items];
         const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
-        
+
         condition.content.match.values.splice(index, 1);
 
+        return {
+          ...state,
+          items
+        }
+      }
+      case 'highlight': {
+        const { indexes } = action;
+        const items = [...state.items];
+        indexes.forEach((index: number) => {
+          items[index].content.highlight = true
+        })
         return {
           ...state,
           items
@@ -127,7 +140,7 @@ const initialState: any = {
           }
         } else if (startDroppable === 'second' && endDroppable === 'first') {
           if (item.itemType === 'parenthesis' && item.content.parenType === 'pair') {
-            items.splice(endIndex, 0, newOpen, newClose) 
+            items.splice(endIndex, 0, newOpen, newClose)
           } else if (item.itemType === 'conditionPlaceholder') {
             const condition = {
               itemType: 'condition',
@@ -150,7 +163,7 @@ const initialState: any = {
             return {
               ...state,
               items
-            } 
+            }
 ;
         } else {
           return state;
@@ -161,7 +174,7 @@ const initialState: any = {
         const { itemType } = item;
         const items = [...state.items]
         if (itemType === 'parenthesis' && item.content.parenType === 'pair' ) {
-         
+
           items.splice(0, 0, newOpen, newClose)
           return {
             ...state,
@@ -195,16 +208,28 @@ const initialState: any = {
       }
       }
       case 'matchTypeSelect':{
-        const { 
+        const {
           conditionId,
           matchType
         } = action;
-        
+
         const items = [...state.items];
         const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
-        
+
         condition.content.match.type = matchType;
 
+        return {
+          ...state,
+          items
+        }
+      }
+      case 'highlightCancel': {
+        const items = [...state.items];
+        items.forEach((item:any) => {
+          if (item.content.hasOwnProperty('highlight')) {
+            item.content.highlight = false;
+          }
+        })
         return {
           ...state,
           items
@@ -214,7 +239,7 @@ const initialState: any = {
         const { conditionId, targetId } = action;
         const items = [...state.items];
         const condition = items.find((item: any) => item.content.conditionId && item.content.conditionId === conditionId);
-        
+
         condition.content.target.id = targetId;
 
         return {
