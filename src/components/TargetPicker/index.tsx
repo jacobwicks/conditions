@@ -2,37 +2,20 @@ import React, {
     useContext 
 } from 'react';
 import { InputContext, } from '../../services/InputContext';
-import { ExpressionContext } from '../../services/ExpressionContext';
+import { FunctionsContext } from '../../services/FunctionsContext';
 import Picker from '../Picker';
-import { 
-    ICondition, 
-    IInput,
-    IOperator,
-    IParenthesis
- } from '../../types';
+import { IInput, IFunction } from '../../types';
 
 const TargetPicker = ({
-    conditionId,
-    exampleValues
+    functionId,
 }: {
-    conditionId ?: string
-    exampleValues ?: {
-        targetId ?: string,
-        setTargetId : (targetId: string | undefined) => void,
-    }
+    functionId ?: string
 }) => {
-    const { dispatch, state } = useContext(ExpressionContext);
-    const { expression } = state;
+    const { dispatch, state } = useContext(FunctionsContext);
+    const { functions } = state;
     const { inputs } = useContext(InputContext).state;
-    const targetId = !exampleValues
-    ? expression.find((item: ICondition | IParenthesis |IOperator) => {
-        if (item.itemType === 'condition') {
-            if (item.content.conditionId === conditionId) {
-                return true
-            } else return false;
-        } else return false;             
-}).content.target.id
-    : exampleValues && exampleValues.targetId;
+    const thisFunction = functions.find((item: IFunction) => item.id === functionId);
+    const targetId = thisFunction.target;
 
     const text = targetId 
     ? inputs.find((input: IInput) => input.id === targetId).name 
@@ -48,22 +31,18 @@ const TargetPicker = ({
     })
     
     const handleChange = (targetId: string) => 
-    conditionId 
-    ? dispatch({
+     dispatch({
         type: 'targetSelect',
-        conditionId,
+        functionId,
         targetId
     })
-    : exampleValues && exampleValues.setTargetId(targetId)
 
     const handleClear = () =>
-    conditionId 
-    ? dispatch({
+     dispatch({
         type: 'targetSelect', 
-        conditionId,
+        functionId,
         targetId: undefined
         })
-    : exampleValues && exampleValues.setTargetId(targetId)
 
     return   (
     <Picker

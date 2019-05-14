@@ -13,7 +13,7 @@ import {
     Modal,
     Popup
 } from 'semantic-ui-react';
-import ExampleCondition from './components/ExampleCondition';
+//import ExampleCondition from './components/ExampleCondition';
 import ExampleParenthesis from './components/ExampleParenthesis';
 import ExampleOperator from './components/ExampleOperator';
 import ExampleInputs from './components/ExampleInputs';
@@ -115,7 +115,8 @@ trigger={
     To remove an operator from the expression, double click it or drag it into the trash.
     </Grid.Column>
     <Grid.Column width={open ? 12 : 4}>
-    <ExampleCondition inputs={inputs} handleOpen={(open: boolean) => setOpen(open)}/>
+    <div>Example Function</div>
+    {/* <ExampleCondition inputs={inputs} handleOpen={(open: boolean) => setOpen(open)}/> */}
     </Grid.Column>
     <Grid.Column width={open ? 4 : 12}>
     Conditions are true or false depending on whether their target input matches the values in the condition.<br/>

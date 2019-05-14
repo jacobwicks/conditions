@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
-import MyDroppable from '../MyDroppable';
+import Droppable from '../Droppable';
 import { ExpressionContext } from '../../services/ExpressionContext';
+import { FunctionsContext } from '../../services/FunctionsContext';
 import { INewComponents } from '../../types';
+import uuidv4 from 'uuid/v4';
 
 const newComponents: INewComponents = [
       {
-          itemType: 'conditionPlaceholder',
+          itemType: 'functionPlaceholder',
       },
     {
       itemType: 'parenthesis',
@@ -47,15 +49,39 @@ const newComponents: INewComponents = [
 
 const NewComponents = () => {
   const { dispatch } = useContext(ExpressionContext)
+  const functionsDispatch = useContext(FunctionsContext).dispatch;
+
   const doubleClickFn = (droppableId: string, index: number) => {
+    //if it's a functionPlaceholder, we want to 
+    //1. Create a new function in functionsContext 
+    //2. call insert function with that functionId in expressionContext
+    //else, go ahead and insertNew
+    if (index === 0) {
+      const id = uuidv4();
+      functionsDispatch({
+        type: 'insert',
+        id,
+        name: undefined
+      });
+      dispatch({
+        type: 'insertNew',
+        item: {
+          itemType: 'function',
+          content: {
+            functionId: id
+          }
+        }
+      })
+    } else {
       dispatch({
         type: 'insertNew',
         item: newComponents[index]
       })
     }
+  }
 
   return (
-    <MyDroppable
+    <Droppable
     droppableId={'newComponents'}
     direction={'horizontal'}
     doubleClickFn={doubleClickFn}

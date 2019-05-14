@@ -3,12 +3,12 @@ import {
   Header,
   Segment
 } from 'semantic-ui-react';
-import { Droppable } from 'react-beautiful-dnd';
-import MyDraggable from '../MyDraggable';
-import { generateId } from './services/';
+import { Droppable as OriginalDroppable } from 'react-beautiful-dnd';
+import Draggable from '../Draggable';
+import { generateId } from './services';
 import { directions } from '../../types';
 
-const MyDroppable = ({
+const Droppable = ({
   droppableId,
   direction,
   doubleClickFn,
@@ -25,7 +25,7 @@ const MyDroppable = ({
   height?: number,
   items: any[],
 }) =>
-<Droppable
+<OriginalDroppable
   droppableId={droppableId}
   direction={direction ? direction : 'vertical'}>
       {(provided, snapshot) => (
@@ -54,7 +54,7 @@ const MyDroppable = ({
         >
           {items && items
           .map((item : any, index: number) =>
-            <MyDraggable
+            <Draggable
             droppableId={droppableId}
             doubleClickFn={doubleClickFn}
             changeOnRightClick={changeOnRightClick}
@@ -80,6 +80,6 @@ const MyDroppable = ({
         </div>
         </Segment>
         )}
-    </Droppable>
+    </OriginalDroppable>
 
-export default MyDroppable;
+export default Droppable;

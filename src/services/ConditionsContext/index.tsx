@@ -1,42 +1,10 @@
 import React, { createContext, useReducer } from 'react';
 import uuidv4 from 'uuid/v4';
 import { IAction } from '../../types';
+import { ICondition2 } from '../../types'
 //import { loadState } from '../../services/Save';
 
-export enum responseEvaluators {
-    anyResponse = 'anyResponse',
-    noResponse = 'noResponse'
-}
 
-export enum searchEvaluators {
-    exact = 'exact',
-    inclusive = 'inclusive',
-    partial = 'partial'
-}
-
-export enum mathEvaluators {
-    equals = 'equals',
-    greaterThan = 'greaterThan',
-    lessThan = 'lessThan',
-    greaterThanOrEqualTo = 'greaterThanOrEqualTo',
-    lessThanOrEqualTo = 'lessThanOrEqualTo',
-    between = 'between'
-}
-
-export type evaluator = responseEvaluators | searchEvaluators | mathEvaluators;
-
-export const allEvaluators = {
-    ...responseEvaluators,
-    ...searchEvaluators,
-    ...mathEvaluators
-};
-
-export interface ICondition2 {
-    name ?: string,
-    id: string,
-    evaluator: evaluator,
-    values ?: (string | number)[]
-}
 
 // const getState = () => {
 //   const loadResult = loadState();

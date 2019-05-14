@@ -1,11 +1,11 @@
 import React, { useContext, Fragment } from 'react';
-import { 
-    ConditionsContext, 
+import { ConditionsContext } from '../../../../services/ConditionsContext';
+import {
     ICondition2,
     responseEvaluators,
     mathEvaluators,
     searchEvaluators
-} from '../../../../services/ConditionsContext';
+} from '../../../../types';
 import {
     Button,
     Dropdown,

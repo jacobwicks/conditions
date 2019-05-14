@@ -3,28 +3,28 @@ import React, {
     useContext, 
     useState 
 } from 'react';
-import { ConditionsContext } from '../../../../services/ConditionsContext';
+import { FunctionsContext } from '../../../../services/FunctionsContext';
 import { 
     Button,
     Icon,
     Input
 } from 'semantic-ui-react';
-import { ICondition2 } from '../../../../types';
+import { IFunction } from '../../../../types';
 import WithInstructions from '../../../WithInstructions';
 
-const _ConditionName = ({
-    conditionId
+const _FunctionName = ({
+    functionId
 }:{
-    conditionId: string
+    functionId: string
 }) => {
-const { dispatch, state } = useContext(ConditionsContext);
-const condition = state.conditions.find((item: ICondition2) => item.id === conditionId);
+const { dispatch, state } = useContext(FunctionsContext);
+const thisFunction = state.functions.find((item: IFunction) => item.id === functionId);
 const [open, setOpen] = useState(false);
-const [temp, setTemp] = useState(condition.name);
+const [temp, setTemp] = useState(thisFunction.name);
 
 const handleBlur = (value:string) => {
     setOpen(false);
-    dispatch({type: 'rename', name: value, conditionId})
+    dispatch({type: 'rename', name: value, functionId})
 }
 
 return open
@@ -45,12 +45,12 @@ return open
     </Fragment>
 : <div>
     <Button icon onClick={() => setOpen(!open)}><Icon name='edit'/></Button>
-    {condition.name}:
+    {thisFunction.name}:
     </div>
 }
 
-const ConditionName = (props: {
-    conditionId: string}) => 
-<WithInstructions child={_ConditionName({...props})} type={'editConditionName'}/>
+const FunctionName = (props: {
+    functionId: string}) => 
+<WithInstructions child={_FunctionName({...props})} type={'editConditionName'}/>
 
-export default ConditionName;
+export default FunctionName;

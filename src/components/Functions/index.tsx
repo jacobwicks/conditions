@@ -1,29 +1,12 @@
 import React, { useContext } from 'react';
 import { 
-    Button,
-    Grid,
     Header,
-    Icon,
     Segment 
 } from 'semantic-ui-react';
-import WithInstructions from '../WithInstructions';
-import { FunctionsContext, IFunction } from '../../services/FunctionsContext';
-import { ConditionsContext, ICondition2 } from '../../services/ConditionsContext';
-import TargetPicker from './components/TargetPicker';
-import ConditionsPicker from './components/ConditionsPicker';
-
-const AddFunctionButton = ({
-    dispatch
-}:{
-    dispatch: ({type}: {type: string}) => void,
-}) => 
-<WithInstructions 
-    child={
-        <Button icon onClick={() => dispatch({type: 'new'})}>
-        <Icon name='plus'/>
-        </Button>} 
-    type={'addCondition'} 
-/>
+import { FunctionsContext } from '../../services/FunctionsContext';
+import { IFunction } from '../../types';
+import Function from './components/Function';
+import AddFunctionButton from './components/AddFunctionButton';
 
 const Functions = () => {
     const { state, dispatch } = useContext(FunctionsContext);
@@ -34,7 +17,7 @@ const Functions = () => {
         <Header>
             Functions
         </Header>
-        <AddFunctionButton dispatch={dispatch}/>
+        <AddFunctionButton addFunction={() => dispatch({type: 'new'})}/>
         {functions.map((thisFunction: IFunction) => <Function functionId={thisFunction.id}/>)}
     </Segment>
     )
@@ -43,44 +26,4 @@ const Functions = () => {
 export default Functions;
 
 
-const Function = ({
-    functionId
-}:{
-    functionId: string
-}) => {
-    const { conditions } = useContext(ConditionsContext).state;
-    const { functions } = useContext(FunctionsContext).state;
-    const thisFunction = functions.find((item: IFunction) => item.id === functionId);
-    const conditionsInFunction = thisFunction.conditions; 
-    return (
-<Segment>
-    Name: {thisFunction.name ? thisFunction.name : 'Anonymous Function'} <br/>
-    <Grid celled columns={2}>
-        <Grid.Row>
-            <Grid.Column textAlign='right'>
-                Target
-            </Grid.Column>
-            <Grid.Column textAlign='left'>
-                <TargetPicker functionId={functionId}/>
-            </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-            <Grid.Column>
-            Conditions
-            </Grid.Column>
-            <Grid.Column>
-            {conditionsInFunction && conditionsInFunction
-            .map((conditionId: string) => 
-            <div>
-            {conditions
-                .find((condition: ICondition2) => 
-                condition.id === conditionId)
-                .name}
-            </div>)}
-            <ConditionsPicker functionId={functionId}/>
-            </Grid.Column>
-        </Grid.Row>
-    </Grid>
-</Segment>
-    )
-}
+

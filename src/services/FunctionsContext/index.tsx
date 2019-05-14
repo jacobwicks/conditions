@@ -1,6 +1,9 @@
 import React, { createContext, useReducer } from 'react';
 import uuidv4 from 'uuid/v4';
-import { IAction } from '../../types';
+import { 
+  IAction,
+  IFunction
+} from '../../types';
 
  const nameExists = (functions: IFunction[], name: string) => functions.some((thisFunction: IFunction) => thisFunction.name === name)
 
@@ -10,13 +13,6 @@ const getName = (functions: IFunction[], name: string) => {
     } 
     return name;       
 }
-
-export interface IFunction {
-    id: string,
-    name?: string,
-    target?: string,
-    conditions?: string[]
-} 
 
 const initialState: any = {
     functions: [],
@@ -48,6 +44,20 @@ const initialState: any = {
           functions
         }
       }
+      case 'insert': {
+        const { id, name } = action;
+        const insertFunction = {
+          id,
+          name,
+          target: undefined,
+          conditions: []
+      }
+      const functions = [...state.functions];
+      functions.push(insertFunction);
+        return { ...state,
+          functions
+        }
+      }
       case 'load':{
         const { functions } = action;
         return {
@@ -60,7 +70,7 @@ const initialState: any = {
             id: uuidv4(),
             name: getName(state.functions, 'function' + ((state.functions.length + 1).toString())),
             target: undefined,
-            values: []
+            conditions: []
         }
         const functions = [...state.functions];
         functions.push(newFunction);

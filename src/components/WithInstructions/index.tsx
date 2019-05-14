@@ -12,10 +12,12 @@ import { InstructionsContext } from '../../services/InstructionsContext';
 
 const WithInstructions = ({
   child,
+  providedContent,
   type
 }: {
   child: ReactElement,
-  type: string
+  providedContent ?: ReactElement | string,
+  type?: string
 }) => {
   const { instructions } = useContext(InstructionsContext).state; 
 
@@ -70,8 +72,15 @@ const WithInstructions = ({
       trash: `The trash. Drag components here to remove them from your expression.`
     }
   
+  const getContent = () => 
+  !!providedContent 
+    ? providedContent 
+    : type
+      ? content[type]
+      : `No instructions available`
+
     return instructions
-    ? <Popup content={content[type]} 
+    ? <Popup content={getContent()} 
       trigger={child}
       />
     : child

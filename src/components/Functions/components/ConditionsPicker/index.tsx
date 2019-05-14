@@ -1,8 +1,8 @@
 import React, { useContext} from 'react';
-import { ConditionsContext, ICondition2 } from '../../../../services/ConditionsContext';
+import { ConditionsContext } from '../../../../services/ConditionsContext';
 import { FunctionsContext } from '../../../../services/FunctionsContext';
 import { Dropdown } from 'semantic-ui-react';
-import { IFunction } from '../../../../services/FunctionsContext';
+import { ICondition2, IFunction } from '../../../../types';
 
 const ConditionsPicker = ({
     functionId

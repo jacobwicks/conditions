@@ -147,22 +147,19 @@ const initialState: any = {
         } else if (startDroppable === 'newComponents' && endDroppable === 'expression') {
           if (item.itemType === 'parenthesis' && item.content.parenType === 'pair') {
             expression.splice(endIndex, 0, newOpen, newClose)
-          } else if (item.itemType === 'conditionPlaceholder') {
-            const condition = {
-              itemType: 'condition',
+          } else if (item.itemType === 'functionPlaceholder') {
+            const functionDraggable = {
+              itemType: 'function',
               content: {
-                conditionId: uuidv4(),
+                functionId: uuidv4(),
                 target: {
                   name: null,
                   type: null
                 },
-                match: {
-                  values: [],
-                  type: null
-                }
+                conditions: []
               },
             }
-            expression.splice(endIndex, 0, condition);
+            expression.splice(endIndex, 0, functionDraggable);
           } else {
             expression.splice(endIndex, 0, item);
           }
@@ -186,26 +183,7 @@ const initialState: any = {
             ...state,
             expression
           }
-        } else if (itemType === 'conditionPlaceholder') {
-          const condition = {
-            itemType: 'condition',
-            content: {
-              conditionId: uuidv4(),
-              target: {
-                id: null
-              },
-              match: {
-                values: [],
-                type: null
-              }
-            },
-        }
-        expression.splice(0,0, condition)
-        return {
-          ...state,
-          expression
-        }
-      } else {
+        } else {
         expression.splice(0,0,item)
         return {
           ...state,
@@ -315,6 +293,16 @@ return (
             }
         }
       } else if (itemType === 'condition') {
+        const { content } = target;
+        const open = content.open ? content.open : false;
+          return {
+            ...target,
+            content: {
+                ...content,
+                open: !open
+            }
+        };
+      } else if (itemType === 'function') {
         const { content } = target;
         const open = content.open ? content.open : false;
           return {

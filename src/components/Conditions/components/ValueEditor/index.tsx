@@ -4,7 +4,7 @@ import { Grid, Button, Icon} from 'semantic-ui-react';
 import ValueInput from './components/ValueInput';
 import {
     ICondition2
-} from '../../../../services/ConditionsContext';
+} from '../../../../types';
 
 const ValueEditor = ({conditionId}:{conditionId: string}) => {
     const { dispatch, state } = useContext(ConditionsContext); 
@@ -13,7 +13,7 @@ const ValueEditor = ({conditionId}:{conditionId: string}) => {
 
 return (
 <Grid.Row>
-<Grid.Column>
+<Grid.Column textAlign='right'>
 Values <br/>
 <Button icon onClick={() => dispatch({type: 'valueAdd', conditionId})}><Icon name='add'/></Button>
 </Grid.Column>

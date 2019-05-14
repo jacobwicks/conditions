@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { ExpressionContext } from '../../../../services/ExpressionContext';
 import { Header, Label } from 'semantic-ui-react';
 import { colors } from '../../../../types';
-import Condition from '../Condition';
 import Parenthesis from '../Parenthesis';
 import { conditionValue } from '../../../../services/ConditionValue'
 import { InputContext, } from '../../../../services/InputContext';
 import WithInstructions from '../../../WithInstructions';
+import Function from '../Function';
 
 const capitalize = (string : string) => string.charAt(0).toUpperCase() + string.slice(1)
 
@@ -47,23 +47,24 @@ const DraggableContent = ({
     if (droppableId === 'expression' ) return child
     else return <WithInstructions child={child} type={`newParenthesis${capitalize(item.content.parenType)}`}/>
   } else {
-      if (item.itemType === 'condition') {
+     if (item.itemType === 'function') {
         
-        const getColor = (conditionId: string) => {
-          const result = conditionValue({conditionId, expression, inputs})
-          if (result === undefined) return 'blue'
-          else return result ? 'green' : 'red'
-        }
+        // const getColor = (conditionId: string) => {
+        //   const result = conditionValue({conditionId, expression, inputs})
+        //   if (result === undefined) return 'blue'
+        //   else return result ? 'green' : 'red'
+        // }
 
-        color = getColor(item.content.conditionId)
-        content = <Condition condition={item.content}/>
+        //color = getColor(item.content.conditionId)
+        color = 'red'
+        content = <Function thisFunction={item.content}/>
         instructionType = item.itemType;
 
-      } else if (item.itemType === 'conditionPlaceholder') {
+      } else if (item.itemType === 'functionPlaceholder') {
       
         color = 'blue'
-        content = <Header as='h1'>Condition</Header>
-        instructionType = 'newCondition';
+        content = <Header as='h1'>Function</Header>
+        instructionType = 'newFunction';
      
       } else if (item.itemType === 'operator') {
      
