@@ -1,13 +1,16 @@
 import React from 'react';
 import './App.css';
 import { Grid } from 'semantic-ui-react';
+import Conditions from './components/Conditions';
 import DragDropContext from './components/DragDropContextWithDispatch'
 import Expression from './components/Expresssion';
-import Insertables from './components/Insertables';
+import Functions from './components/Functions';
+import NewComponents from './components/NewComponents';
 import Inputs from './components/Inputs';
 import Providers from './components/Providers';
 import SaveLoad from './components/SaveLoad';
 import Trash from './components/Trash';
+import ExpressionTab from './components/ExpressionTab';
 
 const App = () =>
   <div className="App">
@@ -18,10 +21,10 @@ const App = () =>
       <Grid columns='equal'>
       <Grid.Row>
       <Grid.Column>
-      <Inputs/>
+        <ExpressionTab/>
       </Grid.Column>
       <Grid.Column>
-        <Insertables/>
+        <NewComponents/>
         <Trash/>
       </Grid.Column>
       </Grid.Row>    
@@ -31,34 +34,3 @@ const App = () =>
   </div>
 
 export default App;
-
-
-// const App = () =>
-//   <div className="App">
-//     <ItemProvider>
-//       <InputProvider>
-//     <DragDropContext>
-//     <SaveLoad/>
-//       <Grid columns='equal'>
-//       <Grid.Column>
-//         <Grid.Row>
-//         <Expression />
-//         </Grid.Row>
-//         <Grid.Row>
-//           <Inputs/>
-//         </Grid.Row>
-//           </Grid.Column>
-//           <Grid.Column>
-//             <Grid.Row>
-//               <Insertables/>
-//             </Grid.Row>
-//             <Grid.Row>
-//               <Trash/>
-//             </Grid.Row>
-//           </Grid.Column>
-//       </Grid>
-//       </DragDropContext>
-//       </InputProvider>
-//     </ItemProvider>
-//   </div>
-

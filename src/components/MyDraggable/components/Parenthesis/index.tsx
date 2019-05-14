@@ -81,10 +81,8 @@ dispatch({
                 if (!changeOnRightClick) return;
               dispatch({
                 type: 'toggle',
-                payload: {
-                  droppableId,
-                  index
-                }
+                droppableId,
+                index
               })
             }}
             onDoubleClick={() => !!doubleClickFn && doubleClickFn(droppableId, index)}

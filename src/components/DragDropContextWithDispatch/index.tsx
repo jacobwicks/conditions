@@ -17,13 +17,11 @@ const DragDropContextWithDispatch = (props: any) => {
 
         dispatch({
           type: 'drag',
-          payload: {
             item,
             startDroppable,
             startIndex,
             endDroppable,
             endIndex
-          }
         })
       }}
       dispatch={dispatch}

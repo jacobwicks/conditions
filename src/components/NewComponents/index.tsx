@@ -50,9 +50,7 @@ const NewComponents = () => {
   const doubleClickFn = (droppableId: string, index: number) => {
       dispatch({
         type: 'insertNew',
-        payload: {
-          item: newComponents[index]
-        }
+        item: newComponents[index]
       })
     }
 

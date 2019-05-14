@@ -112,7 +112,7 @@ const initialState: any = {
         }
       }
       case 'delete': {
-        const { index } = action.payload;
+        const { index } = action;
         const expression = [...state.expression];
         expression.splice(index, 1);
         return {
@@ -127,7 +127,7 @@ const initialState: any = {
           startIndex,
           endDroppable,
           endIndex
-        } = action.payload;
+        } = action;
         const expression = [...state.expression];
         if (startDroppable === 'expression' && endDroppable === 'expression') {
           const moved = expression.splice(startIndex, 1)[0];
@@ -137,7 +137,7 @@ const initialState: any = {
             expression
           }
         } else if (startDroppable === 'expression' && endDroppable === 'trash'){
-          const { startIndex } = action.payload;
+          const { startIndex } = action;
           const expression = [...state.expression];
           expression.splice(startIndex, 1);
           return {
@@ -176,7 +176,7 @@ const initialState: any = {
         }
         }
       case 'insertNew': {
-        const { item } = action.payload;
+        const { item } = action;
         const { itemType } = item;
         const expression = [...state.expression]
         if (itemType === 'parenthesis' && item.content.parenType === 'pair' ) {
@@ -254,7 +254,7 @@ const initialState: any = {
         }
       }
       case 'toggle': {
-          const { index } = action.payload;
+          const { index } = action;
           let target = state.expression[index];
           target = toggle(target);
           const expression = [...state.expression];

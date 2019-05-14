@@ -26,7 +26,7 @@ const doubleClickFn = (droppableId: string, index: number) => {
   if (expression[index].itemType !== 'condition') {
     dispatch({
       type: 'delete',
-      payload: {index}
+      index
     })
   }}
 
