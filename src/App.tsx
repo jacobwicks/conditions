@@ -1,12 +1,9 @@
 import React from 'react';
 import './App.css';
 import { Grid } from 'semantic-ui-react';
-import Conditions from './components/Conditions';
 import DragDropContext from './components/DragDropContextWithDispatch'
 import Expression from './components/Expresssion';
-import Functions from './components/Functions';
 import NewComponents from './components/NewComponents';
-import Inputs from './components/Inputs';
 import Providers from './components/Providers';
 import SaveLoad from './components/SaveLoad';
 import Trash from './components/Trash';

@@ -1,12 +1,7 @@
 import React, { useContext} from 'react';
-import { ConditionsContext, mathEvaluators } from '../../../../services/ConditionsContext';
+import { ConditionsContext, } from '../../../../services/ConditionsContext';
 import { Grid, Button, Icon} from 'semantic-ui-react';
 import ValueInput from './components/ValueInput';
-import { 
-    ICondition, 
-    IOperator, 
-    IParenthesis
-} from '../../../../types';
 import {
     ICondition2
 } from '../../../../services/ConditionsContext';

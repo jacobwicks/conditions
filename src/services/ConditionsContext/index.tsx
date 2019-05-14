@@ -69,9 +69,9 @@ const initialState: any = {
   let reducer = (state: any, action: IAction) => {
     switch (action.type) {
       case 'delete':{
-          const { id } = action;
+          const { conditionId } = action;
           const conditions = [...state.conditions];
-          const index = conditions.findIndex((condition: ICondition2) => condition.id === id);
+          const index = conditions.findIndex((condition: ICondition2) => condition.id === conditionId);
           conditions.splice(index, 1);
           return {
               ...state,

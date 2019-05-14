@@ -1,7 +1,6 @@
 import React, { useContext, Fragment } from 'react';
 import { 
     ConditionsContext, 
-    evaluator as evaluatorType, 
     ICondition2,
     responseEvaluators,
     mathEvaluators,
@@ -52,15 +51,15 @@ const EvaluatorPicker = ({
         )
 
 
-    const explanation : { [key: string] : string} = {
-        anyResponse: 'Any value entered in target',
-        noResponse: 'No value entered in target',
-        exact: 'Target value must exactly match one of the provided values (case insensitive).',
-        partial: 'Whole target value must partially match at least one of the provided values.',
-        inclusive: 'Part of target value must partially or completely match at least one of the provided values.',
-        equals: 'Target value is equal to one of the provided values',
+    // const explanation : { [key: string] : string} = {
+    //     anyResponse: 'Any value entered in target',
+    //     noResponse: 'No value entered in target',
+    //     exact: 'Target value must exactly match one of the provided values (case insensitive).',
+    //     partial: 'Whole target value must partially match at least one of the provided values.',
+    //     inclusive: 'Part of target value must partially or completely match at least one of the provided values.',
+    //     equals: 'Target value is equal to one of the provided values',
 
-    }
+    // }
 
     const handleChange = (evaluator: string) => 
       dispatch({

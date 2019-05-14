@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ConditionsContext, ICondition2 } from '../../services/ConditionsContext';
 import ValueEditor from './components/ValueEditor';
-
+import ConditionName from './components/ConditionName';
 import { 
     Button,
     Grid,
@@ -26,26 +26,14 @@ const AddConditionButton = ({
 />
 
 const DeleteConditionButton = ({
-    dispatch,
-    id
+    deleteCondition
 }:{
-    dispatch: ({
-        type, 
-        id
-    }: {
-        type: string,
-        id: string
-    }) => void,
-    id: string,
+    deleteCondition: () => void,
 }) => {
     const child = 
     <Button icon 
-    onClick={() => {
-        dispatch({
-            type:'delete', 
-            id
-            })}
-    }>
+    floated='right'
+    onClick={() => deleteCondition()}>
     <Icon name='minus'/>
     </Button>
 
@@ -84,11 +72,14 @@ const Condition = ({
 }:{
     conditionId: string
 }) => {
-    const { conditions } = useContext(ConditionsContext).state;
+    const { dispatch, state } = useContext(ConditionsContext)
+    const { conditions } = state;
     const condition = conditions.find((condition: ICondition2) => condition.id === conditionId);
     return (
 <Segment>
-    Name: {condition.name} <br/>
+    <ConditionName conditionId={conditionId}/>
+    <DeleteConditionButton deleteCondition={() => dispatch({type: 'delete', conditionId})}/> 
+    <br/>
     <Grid celled columns={2}>
         <Grid.Row>
             <Grid.Column textAlign='right'>
