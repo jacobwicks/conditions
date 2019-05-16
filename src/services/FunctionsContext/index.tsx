@@ -2,8 +2,21 @@ import React, { createContext, useReducer } from 'react';
 import uuidv4 from 'uuid/v4';
 import { 
   IAction,
-  IFunction
+  IFunction,
 } from '../../types';
+import { loadState } from '../../services/Save';
+
+const getState = () => {
+  const loadResult = loadState();
+  if (!!loadResult.error) {
+      console.error(loadResult.error)
+      //const { conditions } = examples[0];
+      return [];
+  } else {
+      console.log(JSON.stringify(loadResult))
+      return loadResult.functions
+  }        
+}
 
  const nameExists = (functions: IFunction[], name: string) => functions.some((thisFunction: IFunction) => thisFunction.name === name)
 
@@ -15,7 +28,7 @@ const getName = (functions: IFunction[], name: string) => {
 }
 
 const initialState: any = {
-    functions: [],
+    functions: getState(),
     renameFailed: false
 }
 
@@ -78,6 +91,24 @@ const initialState: any = {
             ...state,
             functions
         };
+    }
+    case 'removeCondition': {
+      const {
+        conditionId,
+        functionId
+      } = action;
+      
+      const functions = [...state.functions];
+      const target = functions.find((item: IFunction) => item.id === functionId)
+      let { conditions } = target;
+      conditions = conditions.filter((condition: string) => condition !== conditionId);
+      target.conditions = conditions;
+      
+      return {
+        ...state,
+        functions
+      }
+
     }
       case 'rename':{
           const { functionId, name } = action;

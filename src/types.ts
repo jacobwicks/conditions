@@ -31,7 +31,14 @@ export interface IMatch {
     type: keyof typeof matchTypes
 }
 
-export interface IExpression extends Array<IParenthesis | IOperator | ICondition>{}
+export interface IExpression extends Array<IParenthesis | IOperator | IExpressionFunction>{}
+
+export interface IExpressionFunction {
+  itemType: 'function',
+  content: {
+    functionId: string
+  }
+}
 
 export interface IFunction {
   id: string,

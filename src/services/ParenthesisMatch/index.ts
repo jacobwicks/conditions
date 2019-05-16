@@ -1,10 +1,10 @@
-import { IExpression, IParenthesis, IOperator, ICondition } from '../../types';
+import { IExpression, IExpressionFunction, IParenthesis, IOperator } from '../../types';
 
 interface IParenthesisWithIndex extends IParenthesis {
   index: number,
 }
 
-const isParenthesis = (item: IParenthesis | IOperator | ICondition) =>
+const isParenthesis = (item: IParenthesis | IOperator | IExpressionFunction) =>
 item.itemType === 'parenthesis'
 
 const isOpenParenthesis = (item: IParenthesis) =>

@@ -6,8 +6,10 @@ import {
     Segment 
 } from 'semantic-ui-react';
 import InstructionsModal from '../InstructionsModal';
-import { InstructionsContext } from '../../services/InstructionsContext';
+import { ConditionsContext } from '../../services/ConditionsContext';
 import { ExpressionContext } from '../../services/ExpressionContext';
+import { FunctionsContext } from '../../services/FunctionsContext';
+import { InstructionsContext } from '../../services/InstructionsContext';
 import { InputContext } from '../../services/InputContext';
 import { saveState, loadState, saveInstructionState } from '../../services/Save'
 import WithInstructions from '../WithInstructions';
@@ -20,9 +22,15 @@ const SaveLoad = () => {
     const expressionDispatch = useContext(ExpressionContext).dispatch; 
     const { inputs } = useContext(InputContext).state;
     const inputDispatch = useContext(InputContext).dispatch;
+    const { conditions } = useContext(ConditionsContext).state;
+    const conditionsDispatch = useContext(ConditionsContext).dispatch;
+    const { functions } = useContext(FunctionsContext).state;
+    const functionsDispatch = useContext(FunctionsContext).dispatch;
 
     const handleClear = () => {
+        conditionsDispatch({type: 'load', expression: []});
         expressionDispatch({type: 'load', expression: []});
+        functionsDispatch({type: 'load', functions: []});
         inputDispatch({type: 'load', inputs: []});
     }
 
@@ -32,13 +40,15 @@ const SaveLoad = () => {
             console.error(loadResult.error)
         } else {
             console.log(JSON.stringify(loadResult))
+            conditionsDispatch({type: 'load', conditions: loadResult.conditions});
+            functionsDispatch({type:'load', functions: loadResult.functions});
             expressionDispatch({type: 'load', expression: loadResult.expression});
             inputDispatch({type: 'load', inputs: loadResult.inputs});
         }        
     }
     
     const handleSave = () => {
-        const saveResult = saveState({expression, inputs});
+        const saveResult = saveState({expression, inputs, conditions, functions });
         saveResult === true 
         ? console.log(`Saved!`)
         : console.error(saveResult.error)

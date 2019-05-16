@@ -35,11 +35,11 @@ const Parenthesis = ({
     const higher = Math.max(index, matchIndex);
     const containedExpression = expression.slice(lower, higher);
 
-    const value = evaluateExpression({
-      expression: containedExpression,
-      inputs
-    })
-
+    // const value = evaluateExpression({
+    //   expression: containedExpression,
+    //   inputs
+    // })
+    const value = undefined;
     return value;
 }
   const getContent = () => {

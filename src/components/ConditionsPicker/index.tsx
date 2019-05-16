@@ -1,8 +1,8 @@
 import React, { useContext} from 'react';
-import { ConditionsContext } from '../../../../services/ConditionsContext';
-import { FunctionsContext } from '../../../../services/FunctionsContext';
+import { ConditionsContext } from '../../services/ConditionsContext';
+import { FunctionsContext } from '../../services/FunctionsContext';
 import { Dropdown } from 'semantic-ui-react';
-import { ICondition2, IFunction } from '../../../../types';
+import { ICondition2, IFunction } from '../../types';
 
 const ConditionsPicker = ({
     functionId
@@ -13,7 +13,7 @@ const ConditionsPicker = ({
     const { conditions } = useContext(ConditionsContext).state;
     const { functions } = state;
     const thisFunction = functions.find((item: IFunction) => item.id === functionId);
-    const conditionsInFunction = thisFunction.conditions;
+    const conditionsInFunction = thisFunction && thisFunction.conditions;
 
     const namedConditions = conditions
     .filter((condition: ICondition2) => 
@@ -21,7 +21,6 @@ const ConditionsPicker = ({
     !conditionsInFunction.some((conditionInFunction: string) => condition.id === conditionInFunction)) 
     .filter((condition : ICondition2) => !!condition.name)
 
-    console.log(`namedConditions are`, namedConditions)
     const options = namedConditions.map((condition: ICondition2) => {
         return {
             key: condition.id,
@@ -30,7 +29,6 @@ const ConditionsPicker = ({
         }
     });
 
-    console.log(`options are`, options);
 
     const handleChange = (conditionId : string) => dispatch({
         type: 'conditionAdd',
@@ -39,7 +37,7 @@ const ConditionsPicker = ({
     });
 
     return (
-        <Dropdown
+    <Dropdown
     onChange={(e, {value}) => typeof(value) === 'string' && handleChange(value)}
     options={options}
     search

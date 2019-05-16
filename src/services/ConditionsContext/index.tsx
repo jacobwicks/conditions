@@ -2,21 +2,21 @@ import React, { createContext, useReducer } from 'react';
 import uuidv4 from 'uuid/v4';
 import { IAction } from '../../types';
 import { ICondition2 } from '../../types'
-//import { loadState } from '../../services/Save';
+import { loadState } from '../../services/Save';
 
 
 
-// const getState = () => {
-//   const loadResult = loadState();
-//   if (!!loadResult.error) {
-//       console.error(loadResult.error)
-//       const { inputs } = examples[0];
-//       return inputs;
-//   } else {
-//       console.log(JSON.stringify(loadResult))
-//       return loadResult.inputs
-//   }        
-// }
+const getState = () => {
+  const loadResult = loadState();
+  if (!!loadResult.error) {
+      console.error(loadResult.error)
+      //const { conditions } = examples[0];
+      return [];
+  } else {
+      console.log(JSON.stringify(loadResult))
+      return loadResult.conditions
+  }        
+}
 
 const nameExists = (conditions: ICondition2[], name: string) => conditions.some((condition: ICondition2) => condition.name === name)
 
@@ -29,7 +29,7 @@ const getName = (conditions: ICondition2[], name: string) => {
 
 
 const initialState: any = {
-    conditions: [],
+    conditions: getState(),
     renameFailed: false
 }
 
@@ -58,53 +58,43 @@ const initialState: any = {
       }
       case 'load':{
         const { conditions } = action;
+        console.log(`loading conditions`, conditions)
         return {
             ...state,
             conditions
         };
     }
       case 'new':{
+        const { id } = action;
         const newCondition = {
-            id: uuidv4(),
+            id: id ? id : uuidv4(),
             name: getName(state.conditions, 'condition' + ((state.conditions.length + 1).toString())),
             values: []
         }
         const conditions = [...state.conditions];
-        conditions.push(newCondition);
+        conditions.unshift(newCondition);
         return {
             ...state,
             conditions
         };
     }
       case 'rename':{
-          const { index, name } = action;
+          const { conditionId, name } = action;
           
-          if (nameExists(state.inputs, name)) {
+          if (!!name && nameExists(state.conditions, name)) {
               return {
                   ...state,
                   renameFailed: true
               }
           }
-          const inputs = [...state.inputs];
-          const target = {...state.inputs[index]};
+          const conditions = [...state.conditions];
+          const target = conditions.find((condition: ICondition2) => condition.id === conditionId);
           target.name = name;
-          inputs[index] = target;
-
+          
           return {
               ...state,
-              inputs,
+              conditions,
               renameFailed: false
-          }
-      }
-      case 'save':{
-          const { index, value } = action;
-          const inputs = [...state.inputs];
-          const target = {...state.inputs[index]};
-          target.value = value;
-          inputs[index] = target;
-          return {
-              ...state,
-              inputs
           }
       }
       case 'valueAdd': {

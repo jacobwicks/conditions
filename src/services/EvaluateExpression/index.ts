@@ -1,18 +1,21 @@
 import { 
     ICondition,
+    ICondition2,
+    IFunction,
     IInput, 
     IExpression,
+    IExpressionFunction,
     IParenthesis, 
     IOperator 
 } from '../../types';
 
-import { conditionValue } from '../ConditionValue';
+import { functionValue } from '../FunctionValue';
 
-const isCondition = ({itemType} : ICondition | IOperator | IParenthesis) => itemType === 'condition';
+const isFunction = ({itemType} : IExpressionFunction | IOperator | IParenthesis) => itemType === 'function';
 
-const isOperator = ({itemType}: ICondition | IOperator | IParenthesis) => itemType === 'operator';
+const isOperator = ({itemType}: IExpressionFunction | IOperator | IParenthesis) => itemType === 'operator';
 
-const operatorIsNot = (item: ICondition | IOperator | IParenthesis) => {
+const operatorIsNot = (item: IExpressionFunction | IOperator | IParenthesis) => {
  if (item.itemType === 'operator') {
      if (item.content.operatorType === 'not') {
          return true;
@@ -20,7 +23,7 @@ const operatorIsNot = (item: ICondition | IOperator | IParenthesis) => {
  } else return false;
 };
 
-const isOpenParenthesis = (item : ICondition | IOperator | IParenthesis) => {
+const isOpenParenthesis = (item : IExpressionFunction | IOperator | IParenthesis) => {
     if (item.itemType === 'parenthesis') {
         if (item.content.parenType === 'open') {
             return true;
@@ -28,7 +31,7 @@ const isOpenParenthesis = (item : ICondition | IOperator | IParenthesis) => {
     } else return false;
 }
 
-const isCloseParenthesis = (item : ICondition | IOperator | IParenthesis) => {
+const isCloseParenthesis = (item : IExpressionFunction | IOperator | IParenthesis) => {
     if (item.itemType === 'parenthesis') {
         if (item.content.parenType === 'close') {
             return true;
@@ -65,10 +68,14 @@ const threeParameter = ( op: IOperator, value1?: boolean, value2?: boolean) => {
 
 
 export const evaluateExpression = ({
+    conditions,
     expression, 
+    functions,
     inputs
 } : {
+    conditions: ICondition2[],
     expression: IExpression,
+    functions: IFunction[],
     inputs: IInput[]
 }) => {
     // 1. While there are still tokens to be read in,
@@ -83,12 +90,13 @@ export const evaluateExpression = ({
     //    1.2 If the token is:
     //        1.2.1 A number: push it onto the value stack.
     //        1.2.2 A variable: get its value, and push onto the value stack.
-    if (isCondition(item)) {
+    if (isFunction(item)) {
         //@ts-ignore
-        const { conditionId }  = item.content;  
-        const value = conditionValue ({
-            conditionId,
-            expression,
+        const { functionId } = item.content
+        const value = functionValue ({
+            functionId,
+            conditions,
+            functions,
             inputs
         })
         values.push(value);
@@ -193,3 +201,4 @@ export const evaluateExpression = ({
 
     return values[0];
 }
+

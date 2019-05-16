@@ -24,6 +24,7 @@ const [temp, setTemp] = useState(condition.name);
 
 const handleBlur = (value:string) => {
     setOpen(false);
+    console.log(`renaming to ${value}`)
     dispatch({type: 'rename', name: value, conditionId})
 }
 
@@ -43,10 +44,10 @@ return open
 
         />
     </Fragment>
-: <div>
+: <span>
     <Button icon onClick={() => setOpen(!open)}><Icon name='edit'/></Button>
-    {condition.name}:
-    </div>
+    {condition.name ? condition.name : `Anonymous Condition`}
+    </span>
 }
 
 const ConditionName = (props: {

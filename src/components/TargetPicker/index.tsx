@@ -15,7 +15,7 @@ const TargetPicker = ({
     const { functions } = state;
     const { inputs } = useContext(InputContext).state;
     const thisFunction = functions.find((item: IFunction) => item.id === functionId);
-    const targetId = thisFunction.target;
+    const targetId = thisFunction && thisFunction.target;
 
     const text = targetId 
     ? inputs.find((input: IInput) => input.id === targetId).name 

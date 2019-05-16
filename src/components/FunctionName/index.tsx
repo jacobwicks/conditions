@@ -3,14 +3,14 @@ import React, {
     useContext, 
     useState 
 } from 'react';
-import { FunctionsContext } from '../../../../services/FunctionsContext';
+import { FunctionsContext } from '../../services/FunctionsContext';
 import { 
     Button,
     Icon,
     Input
 } from 'semantic-ui-react';
-import { IFunction } from '../../../../types';
-import WithInstructions from '../../../WithInstructions';
+import { IFunction } from '../../types';
+import WithInstructions from '../WithInstructions';
 
 const _FunctionName = ({
     functionId
@@ -45,7 +45,7 @@ return open
     </Fragment>
 : <div>
     <Button icon onClick={() => setOpen(!open)}><Icon name='edit'/></Button>
-    {thisFunction.name}:
+    {thisFunction.name ? thisFunction.name : `Anonymous Function`}
     </div>
 }
 

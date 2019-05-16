@@ -48,7 +48,7 @@ const newComponents: INewComponents = [
 
 
 const NewComponents = () => {
-  const { dispatch } = useContext(ExpressionContext)
+  const expressionDispatch = useContext(ExpressionContext).dispatch;
   const functionsDispatch = useContext(FunctionsContext).dispatch;
 
   const doubleClickFn = (droppableId: string, index: number) => {
@@ -63,7 +63,7 @@ const NewComponents = () => {
         id,
         name: undefined
       });
-      dispatch({
+      expressionDispatch({
         type: 'insertNew',
         item: {
           itemType: 'function',
@@ -73,7 +73,7 @@ const NewComponents = () => {
         }
       })
     } else {
-      dispatch({
+      expressionDispatch({
         type: 'insertNew',
         item: newComponents[index]
       })

@@ -5,11 +5,12 @@ import { IFunction } from '../../../../types';
 import {
     Grid,
     Segment,
+    Label,
 } from 'semantic-ui-react';
 import TargetPicker from '../../../TargetPicker';
-import ConditionsPicker from '../ConditionsPicker';
+import ConditionsPicker from '../../../ConditionsPicker';
 import { ICondition2 } from '../../../../types';
-import FunctionName from '../FunctionName';
+import FunctionName from '../../../FunctionName';
 import DeleteFunctionButton from '../DeleteFunctionButton';
 import AddFunctionToExpressionButton from '../AddFunctionToExpressionButton';
 
@@ -23,10 +24,17 @@ const Function = ({
     const { functions } = state;
     const thisFunction = functions.find((item: IFunction) => item.id === functionId);
     const conditionsInFunction = thisFunction.conditions; 
+
+    const removeConditionFromFunction = (conditionId: string) => dispatch({
+        type: 'removeCondition',
+        conditionId,
+        functionId
+    });
+
     return (
 <Segment color='blue'>
-    <FunctionName functionId={functionId}/>
     <DeleteFunctionButton deleteFunction={() => dispatch({type: 'delete', functionId})} />
+    <FunctionName functionId={functionId}/>
     <AddFunctionToExpressionButton functionId={functionId} />
     <Grid celled columns={2}>
         <Grid.Row>
@@ -39,17 +47,19 @@ const Function = ({
         </Grid.Row>
         <Grid.Row>
             <Grid.Column>
-            Conditions
+                Conditions
             </Grid.Column>
             <Grid.Column>
             {conditionsInFunction && conditionsInFunction
-            .map((conditionId: string) => 
-            <div>
-            {conditions
+            .map((conditionId: string) => {
+                const { name } = conditions
                 .find((condition: ICondition2) => 
                 condition.id === conditionId)
-                .name}
-            </div>)}
+
+                return <div>
+                {<Label onDoubleClick={() => removeConditionFromFunction(conditionId)}>{name}</Label>}
+                </div>
+            })}
             <ConditionsPicker functionId={functionId}/>
             </Grid.Column>
         </Grid.Row>

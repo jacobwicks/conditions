@@ -1,38 +1,47 @@
-import { match } from '../Match';
-import { ICondition, IInput, IExpression, IOperator, IParenthesis, ICondition2, IFunction } from '../../types';
+import { ICondition2, IInput, IFunction } from '../../types';
+import { conditionValue } from '../ConditionValue';
 
-export const conditionValue = ({
-    conditionId,
+export const functionValue = ({
     functionId,
     conditions,
-    inputs,
-    functions
+    functions,
+    inputs
 }: {
-    conditionId: string,
     functionId: string,
     conditions: ICondition2[],
-    inputs: IInput[],
-    functions: IFunction[]
+    functions: IFunction[],
+    inputs: any[]
 }) => {
-  const condition = conditions.find((c: ICondition2) => c.id === conditionId);
-  if (!condition) return undefined;
+  const thisFunction = functions.find((fn: IFunction) => fn.id === functionId)
+    
+    //@ts-ignore
+    const { target, conditions: conditionsInFunction } = thisFunction;
+    if (!target) return undefined;
+    if (!inputs || inputs.length === 0) return undefined;
 
-  const thisFunction = functions.find((fn: IFunction) => fn.id === functionId);
-  if (!thisFunction) return undefined;
+    const result = conditionsInFunction.slice(0).reduce((
+      acc: boolean | undefined, 
+      conditionId: string, 
+      index: number, 
+      arr: string[]
+      ) => {
+      acc = conditionValue({
+          conditionId,
+          functionId,
+          conditions,
+          inputs,
+          functions
+      })
+      
+      //break out of reduce if anything returns false
+      if (acc === false || acc === undefined) {
+        arr.splice(1)
+      }
+      return acc;
+    }, undefined)
 
-  const { target } = thisFunction;
-  if (!target) return undefined;
-
-  if (!inputs || inputs.length === 0) return undefined;  
-  const input = inputs.find((input: IInput) => input.id === target);
-  if (!input) return undefined;
-  const inputValue = input.value;
-  const { evaluator, values }  = condition;
-  if (evaluator === 'noResponse') {
-    return !(!!inputValue);
-  } else if (evaluator === 'anyResponse') {
-    return !!inputValue;
-  } else return undefined;
+    console.log(`result is `, result);
+    return result;
     
 //     if (matchType === 'exact') {
 //         if (!(!!values.length) || !inputValue) return false;

@@ -11,7 +11,7 @@ import Condition from './components/Condition';
 const Conditions = () => {
     const  { state, dispatch } = useContext(ConditionsContext);
     const { conditions } = state;
-    const namedConditions = conditions.map((condition: ICondition2) => condition.name && condition)
+    //const namedConditions = conditions.map((condition: ICondition2) => condition.name && condition)
     
 return (
     <Segment>
@@ -22,9 +22,9 @@ return (
         dispatch={dispatch}
     />
          <br/><br/>
-    {namedConditions
+    {conditions
     .map((condition: ICondition2) => 
-   <Condition conditionId={condition.id} />
+   <Condition key={`condition` + condition.id} conditionId={condition.id} />
     )}
 </Segment>
 )}

@@ -8,13 +8,16 @@ import ConditionName from '../ConditionName';
 import DeleteConditionButton from '../DeleteConditionButon';
 import EvaluatorPicker from '../EvaluatorPicker';
 import ValueEditor from '../ValueEditor';
+import { ICondition2 } from '../../../../types';
 
 const Condition = ({
     conditionId
 }:{
     conditionId: string
 }) => {
-    const { dispatch } = useContext(ConditionsContext)
+    const { dispatch, state } = useContext(ConditionsContext)
+    const { evaluator } = state.conditions.find((condition : ICondition2) => condition.id === conditionId) 
+    const hideValues = evaluator === 'noResponse' || evaluator === 'anyResponse';
     return (
 <Segment color='yellow'>
     <ConditionName conditionId={conditionId}/>
@@ -29,7 +32,7 @@ const Condition = ({
                 <EvaluatorPicker conditionId={conditionId}/>
             </Grid.Column>
         </Grid.Row>
-        <ValueEditor conditionId={conditionId}/>
+        {!hideValues && <ValueEditor conditionId={conditionId}/>}
     </Grid>
 </Segment>
     )

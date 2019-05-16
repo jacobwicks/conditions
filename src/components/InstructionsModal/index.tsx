@@ -22,8 +22,8 @@ import uuidv4 from 'uuid/v4';
 import { InstructionsContext } from '../../services/InstructionsContext';
 
 const InstructionsModal = () => {
+  const open = false;
   const [modalOpen, setModalOpen] = useState(false);
-  const [open, setOpen] = useState(false);
   const [inputs, setInputs] = useState<IInput[]>([{
       id: `1`,
       name: `1`,

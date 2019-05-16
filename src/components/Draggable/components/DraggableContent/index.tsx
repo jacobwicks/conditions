@@ -3,10 +3,12 @@ import { ExpressionContext } from '../../../../services/ExpressionContext';
 import { Header, Label } from 'semantic-ui-react';
 import { colors } from '../../../../types';
 import Parenthesis from '../Parenthesis';
-import { conditionValue } from '../../../../services/ConditionValue'
+import { ConditionsContext } from '../../../../services/ConditionsContext';
+import { FunctionsContext } from '../../../../services/FunctionsContext';
 import { InputContext, } from '../../../../services/InputContext';
 import WithInstructions from '../../../WithInstructions';
 import Function from '../Function';
+import { functionValue } from '../../../../services/FunctionValue';
 
 const capitalize = (string : string) => string.charAt(0).toUpperCase() + string.slice(1)
 
@@ -25,10 +27,11 @@ const DraggableContent = ({
   isDragging: boolean,
   changeOnRightClick?: boolean,
 }) => {
-  const { expression } = useContext(ExpressionContext).state;
+  const { conditions } = useContext(ConditionsContext).state
+  const { dispatch } = useContext(ExpressionContext);
+  const { functions } = useContext(FunctionsContext).state;
   const { inputs } = useContext(InputContext).state;
-  const { dispatch } = useContext(ExpressionContext)
-
+  
   let color: keyof typeof colors | undefined = undefined;
   let content: string | undefined | any = undefined;
   let instructionType = '';
@@ -49,14 +52,20 @@ const DraggableContent = ({
   } else {
      if (item.itemType === 'function') {
         
-        // const getColor = (conditionId: string) => {
-        //   const result = conditionValue({conditionId, expression, inputs})
-        //   if (result === undefined) return 'blue'
-        //   else return result ? 'green' : 'red'
-        // }
+        const getColor = () => {
+          const functionId = item.content.functionId;
 
-        //color = getColor(item.content.conditionId)
-        color = 'red'
+          const result = functionValue({
+            functionId,
+            conditions,
+            functions,
+            inputs
+          })
+          if (result === undefined) return 'blue'
+          else return result ? 'green' : 'red'
+        }
+
+        color = getColor();
         content = <Function thisFunction={item.content}/>
         instructionType = item.itemType;
 
