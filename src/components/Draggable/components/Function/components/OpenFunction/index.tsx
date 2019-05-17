@@ -1,14 +1,12 @@
-import React, { useContext, useState} from 'react';
+import React, { useContext } from 'react';
 import { ConditionsContext } from '../../../../../../services/ConditionsContext';
 import { FunctionsContext } from '../../../../../../services/FunctionsContext';
-import { Button, Icon, Grid, Label, Modal, Segment } from 'semantic-ui-react';
+import { Button, Icon, Grid, Segment } from 'semantic-ui-react';
 import TargetPicker from '../../../../../TargetPicker';
-import { ICondition2 } from '../../../../../../types';
 import ConditionsPicker from '../../../../../ConditionsPicker';
-import Condition from '../../../../../Conditions/components/Condition';
 import uuidv4 from 'uuid';
 import FunctionName from '../../../../../FunctionName';
-import ConditionLabel from './components/ConditionLabel';
+import ConditionsGrid from './components/ConditionsGrid';
 
 const OpenFunction = ({
     functionId,
@@ -17,13 +15,12 @@ const OpenFunction = ({
     functionId: string,
     functionConditions: string[],
 }) => {
-    const { dispatch, state } = useContext(ConditionsContext);
-    const { conditions } = state;
+    const conditionsDispatch = useContext(ConditionsContext).dispatch;
     const functionsDispatch = useContext(FunctionsContext).dispatch;
 
     const createNewCondition = () => {
         const id = uuidv4();
-        dispatch({
+        conditionsDispatch({
             type: 'new',
             id
         })
@@ -33,12 +30,6 @@ const OpenFunction = ({
           functionId
         });
     }
-
-    const removeConditionFromFunction = (conditionId: string) => functionsDispatch({
-        type: 'removeCondition',
-        conditionId,
-        functionId
-    }); 
 
     return (
 <Segment style={{
@@ -54,8 +45,8 @@ const OpenFunction = ({
         <Grid.Column>
         <TargetPicker functionId={functionId}/>
         </Grid.Column>
-</Grid.Row>
-<Grid.Row>
+    </Grid.Row>
+    <Grid.Row>
     <Grid.Column width={3}>
         Conditions
         <Button icon onClick={() => createNewCondition()}><Icon name='add' /></Button>
@@ -65,17 +56,12 @@ const OpenFunction = ({
     {(!functionConditions || !(!!functionConditions.length)) && `No Conditions in this function`}
     </Grid.Row>
     <Grid.Row>
+        <Segment>
     <ConditionsPicker functionId={functionId} />
+    </Segment>
     </Grid.Row>
     <Grid.Row>
-    {functionConditions.map((conditionId: string) => {
-        const condition = conditions.find((condition: ICondition2) => condition.id === conditionId)
-        return <ConditionLabel 
-        key={`conditionLabel${condition.id}`} 
-        condition={condition}
-        functionId={functionId} 
-        remove={() => removeConditionFromFunction(conditionId)}/> 
-    })}
+        <ConditionsGrid conditionIds={functionConditions} functionId={functionId}/>
     </Grid.Row>
     </Grid.Column>
     </Grid.Row>
@@ -84,5 +70,3 @@ const OpenFunction = ({
 )}
 
 export default OpenFunction;
-
-

@@ -11,7 +11,7 @@ const getState = () => {
       const { inputs } = examples[0];
       return inputs;
   } else {
-      console.log(JSON.stringify(loadResult))
+    //   console.log(JSON.stringify(loadResult))
       return loadResult.inputs
   }        
 }

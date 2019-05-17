@@ -18,9 +18,10 @@ const Function = ({
     
     const targetFunction = functions && functions.find((fn: IFunction) => fn.id === functionId);
     const { 
+        name,
         target: targetId, 
         conditions: functionConditions,
-    } = targetFunction || { target: `1`, conditions: []};
+    } = targetFunction || {name: `none`, target: `1`, conditions: []};
     
     const target = inputs
     .find((input: IInput) => 
@@ -34,6 +35,7 @@ return open
 />
 : <ClosedFunction
     target={target}
+    name={name}
     functionConditions={functionConditions}
 />
 }

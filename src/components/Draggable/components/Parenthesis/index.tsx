@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { Header, Label } from 'semantic-ui-react';
 import { ExpressionContext } from '../../../../services/ExpressionContext'
 import { getMatch } from '../../../../services/ParenthesisMatch';
-import { InputContext } from '../../../../services/InputContext';
-import { evaluateExpression } from '../../../../services/EvaluateExpression';
+//import { InputContext } from '../../../../services/InputContext';
+//import { evaluateExpression } from '../../../../services/EvaluateExpression';
 
 const Parenthesis = ({
   parenthesis,
@@ -26,14 +26,14 @@ const Parenthesis = ({
 }) => {
   const { state, dispatch } = useContext(ExpressionContext);
   const { expression } = state;
-  const { inputs } = useContext(InputContext).state;
+  //const { inputs } = useContext(InputContext).state;
 
   const { parenType, highlight } = parenthesis;
 
   const getContainedExpressionValue = (index: number, matchIndex: number) => {
-    const lower = Math.min(index, matchIndex) + 1;
-    const higher = Math.max(index, matchIndex);
-    const containedExpression = expression.slice(lower, higher);
+    // const lower = Math.min(index, matchIndex) + 1;
+    // const higher = Math.max(index, matchIndex);
+    //const containedExpression = expression.slice(lower, higher);
 
     // const value = evaluateExpression({
     //   expression: containedExpression,

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import Droppable from '../Droppable';
-import { Transition, Button, Divider, Icon, Item } from 'semantic-ui-react';
+import { Transition, Button, Divider, Icon } from 'semantic-ui-react';
 import { ConditionsContext } from '../../services/ConditionsContext';
 import { ExpressionContext } from '../../services/ExpressionContext';
 import { FunctionsContext } from '../../services/FunctionsContext';

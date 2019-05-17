@@ -13,7 +13,7 @@ const getState = () => {
       //const { conditions } = examples[0];
       return [];
   } else {
-      console.log(JSON.stringify(loadResult))
+      // console.log(JSON.stringify(loadResult))
       return loadResult.conditions
   }        
 }

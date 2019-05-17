@@ -1,5 +1,4 @@
 import { 
-    ICondition,
     ICondition2,
     IFunction,
     IInput, 

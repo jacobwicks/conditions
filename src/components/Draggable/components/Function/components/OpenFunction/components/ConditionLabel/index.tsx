@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ICondition2 } from '../../../../../../../../types';
 import { 
-    Icon,
     Label,
     Modal
 } from 'semantic-ui-react';
@@ -16,11 +15,9 @@ import { conditionValue } from '../../../../../../../../services/ConditionValue'
 const ConditionLabel = ({
     condition,
     functionId,
-    remove
 }:{
     condition: ICondition2,
     functionId: string,
-    remove: () => void
 }) => {
     const [open, setOpen] = useState(false);
     const { conditions } = useContext(ConditionsContext).state;
@@ -45,8 +42,7 @@ const ConditionLabel = ({
     }
 
 return (
-<div key={'label' + condition.id} style={{cursor:'pointer'}}>
-            <Icon name='delete' onClick={() => remove()}/> 
+<div key={'label' + condition.id + functionId} style={{cursor:'pointer'}}>
             <Label color={getColor()} onDoubleClick={() => setOpen(true)}>
             {name ? name : `Anonymous condition`}
             </Label>

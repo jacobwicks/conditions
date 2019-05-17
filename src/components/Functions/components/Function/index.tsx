@@ -56,7 +56,7 @@ const Function = ({
                 .find((condition: ICondition2) => 
                 condition.id === conditionId)
 
-                return <div>
+                return <div key={`conditionLabel${functionId}${conditionId}`}>
                 {<Label onDoubleClick={() => removeConditionFromFunction(conditionId)}>{name}</Label>}
                 </div>
             })}

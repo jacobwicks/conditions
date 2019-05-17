@@ -11,7 +11,7 @@ const getState = () => {
       const { expression } = examples[0];
       return expression;
   } else {
-      console.log(JSON.stringify(loadResult))
+      // console.log(JSON.stringify(loadResult))
       return loadResult.expression
   }        
 }

@@ -1,5 +1,134 @@
-import { match } from '../Match';
-import { ICondition, IInput, IExpression, IOperator, IParenthesis, ICondition2, IFunction } from '../../types';
+import {  
+  IInput, 
+  ICondition2, 
+  IFunction, 
+  mathEvaluators, 
+  responseEvaluators 
+} from '../../types';
+
+const responseEvaluation = ({
+  inputValue,
+  evaluator,
+ }: {
+  inputValue: string,
+  evaluator: string,
+}) => { 
+  const evaluate: {[key: string]: () => boolean} = {
+    anyResponse: () => !!inputValue,
+    noResponse: () => !!inputValue
+  }
+  return evaluate[evaluator]();
+}
+
+const mathEvaluation = ({
+  inputValue,
+  evaluator,
+  values
+}: {
+  inputValue: string,
+  evaluator: string,
+  values: (string | number)[]
+}) => {
+ const input = parseFloat(inputValue);
+const evaluate: { [key: string]: () => boolean | undefined } = {
+  equals: () => {
+    const equalsResult = values.slice(0).reduce((
+      result: boolean | undefined, 
+      value: string | number,
+      index: number,
+      arr: (string | number)[]  
+      ) => {
+        //@ts-ignore
+      const numberValue: number = typeof(value === 'string') ? parseFloat(value) : value 
+      result = input === numberValue;
+      if (result === true) {
+        arr.splice(1)
+      } 
+      return result;
+    }, undefined)
+    return equalsResult;
+  },
+  greaterThan: () => {
+    return values.slice(0).reduce((
+      result: boolean | undefined, 
+      value: string | number,
+      index: number,
+      arr: (string | number)[]  
+      ) => {
+      //@ts-ignore
+      const numberValue: number = typeof(value === 'string') ? parseFloat(value) : value 
+      result = input > numberValue;
+      if (result === true) {
+        arr.splice(1)
+      } 
+      return result;
+    }, undefined)
+  },
+  lessThan: () => {
+    return values.slice(0).reduce((
+      result: boolean | undefined, 
+      value: string | number,
+      index: number,
+      arr: (string | number)[]  
+      ) => {
+                //@ts-ignore
+      const numberValue: number = typeof(value === 'string') ? parseFloat(value) : value 
+      result = input < numberValue;
+      if (result === true) {
+        arr.splice(1)
+      } 
+      return result;
+    }, undefined)
+  },
+  greaterThanOrEqualTo: () => {
+    return values.slice(0).reduce((
+      result: boolean | undefined, 
+      value: string | number,
+      index: number,
+      arr: (string | number)[]  
+      ) => {
+                //@ts-ignore
+      const numberValue: number = typeof(value === 'string') ? parseFloat(value) : value 
+
+      result = input >= numberValue;
+      if (result === true) {
+        arr.splice(1)
+      } 
+      return result;
+    }, undefined)
+  },
+  lessThanOrEqualTo: () => {
+    return values.slice(0).reduce((
+      result: boolean | undefined, 
+      value: string | number,
+      index: number,
+      arr: (string | number)[]  
+      ) => {
+                //@ts-ignore
+      const numberValue: number = typeof(value === 'string') ? parseFloat(value) : value 
+      result = input >= numberValue;
+      if (result === true) {
+        arr.splice(1)
+      } 
+      return result;
+    }, undefined)
+  },
+  between: () => {
+    const twoValues = values.slice(0, 2);
+    if (twoValues[0] === undefined || twoValues[1] === undefined) return undefined;
+    //@ts-ignore
+    twoValues[0] = typeof(twoValues[0] === 'string') ? parseFloat(twoValues[0]) : twoValues[0] 
+    //@ts-ignore
+    twoValues[1] = typeof(twoValues[1] === 'string') ? parseFloat(twoValues[1]) : twoValues[1];
+    if (input > twoValues[0] && input < twoValues[1]) return true;
+    if (input < twoValues[0] && input > twoValues[1]) return true;
+    return false;
+  },
+};
+
+return evaluate[evaluator]();
+}
+
 
 export const conditionValue = ({
     conditionId,
@@ -27,11 +156,21 @@ export const conditionValue = ({
   const input = inputs.find((input: IInput) => input.id === target);
   if (!input) return undefined;
   const inputValue = input.value;
-  const { evaluator, values }  = condition;
-  if (evaluator === 'noResponse') {
-    return !(!!inputValue);
-  } else if (evaluator === 'anyResponse') {
-    return !!inputValue;
+  const { evaluator, values } = condition;
+  
+  if (Object.keys(responseEvaluators).includes(evaluator)) {
+    return responseEvaluation({
+      inputValue,
+      evaluator
+    })
+  } else if (Object.keys(mathEvaluators).includes(evaluator)) {
+    if (!values) {
+      return undefined;
+    } else return mathEvaluation({
+      inputValue,
+      evaluator,
+      values
+    })
   } else return undefined;
     
 //     if (matchType === 'exact') {
