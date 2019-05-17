@@ -3,8 +3,55 @@ import {
   ICondition2, 
   IFunction, 
   mathEvaluators, 
-  responseEvaluators 
+  responseEvaluators,
+  searchEvaluators 
 } from '../../types';
+import _ from 'lodash';
+
+export const searchEvaluation = ({
+  inputValue,
+  evaluator,
+  values
+}:{
+  inputValue: string,
+  evaluator: searchEvaluators,
+  values:string[]
+}) => {
+
+  const evaluate: { [key: string]: () => boolean | undefined } = {
+    exact: () => values.slice(0).reduce((
+        result: boolean | undefined, 
+        value: string,
+        index: number,
+        arr: string[]  
+        ) => {
+        result = inputValue.toLowerCase() === value.toLowerCase();
+        if (result === true) {
+          arr.splice(1)
+        } 
+        return result;
+      }, undefined),
+
+    // if part of the input string is equal to all of one or more of the provided values
+    partial: () => values.slice(0).reduce((
+      result: boolean | undefined, 
+      value: string,
+      index: number,
+      arr: string[]  
+      ) => {
+      const re = new RegExp(_.escapeRegExp(value), 'i');
+      result = re.test(inputValue)       
+      if (result === true) {
+        arr.splice(1)
+      } 
+      return result;
+    }, undefined),
+    inclusive: () => false,
+  }
+
+
+return evaluate[evaluator]()
+}
 
 const responseEvaluation = ({
   inputValue,
@@ -32,7 +79,7 @@ const mathEvaluation = ({
  const input = parseFloat(inputValue);
 const evaluate: { [key: string]: () => boolean | undefined } = {
   equals: () => {
-    const equalsResult = values.slice(0).reduce((
+    return values.slice(0).reduce((
       result: boolean | undefined, 
       value: string | number,
       index: number,
@@ -46,7 +93,6 @@ const evaluate: { [key: string]: () => boolean | undefined } = {
       } 
       return result;
     }, undefined)
-    return equalsResult;
   },
   greaterThan: () => {
     return values.slice(0).reduce((
@@ -171,6 +217,13 @@ export const conditionValue = ({
       evaluator,
       values
     })
+  } else if (Object.keys(searchEvaluators).includes(evaluator)) {
+    if (!values) {
+      return
+    }
+    //NOTE: re-type values to be string[]
+    //@ts-ignore
+    return searchEvaluation({inputValue, evaluator, values})
   } else return undefined;
     
 //     if (matchType === 'exact') {

@@ -28,7 +28,7 @@ const SaveLoad = () => {
     const functionsDispatch = useContext(FunctionsContext).dispatch;
 
     const handleClear = () => {
-        conditionsDispatch({type: 'load', expression: []});
+        conditionsDispatch({type: 'load', conditions: []});
         expressionDispatch({type: 'load', expression: []});
         functionsDispatch({type: 'load', functions: []});
         inputDispatch({type: 'load', inputs: []});

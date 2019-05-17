@@ -11,8 +11,7 @@ import Condition from './components/Condition';
 const Conditions = () => {
     const  { state, dispatch } = useContext(ConditionsContext);
     const { conditions } = state;
-    //const namedConditions = conditions.map((condition: ICondition2) => condition.name && condition)
-    
+    console.log(`conditions are `, conditions)
 return (
     <Segment>
     <Header>
